@@ -4,12 +4,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'states.dart';
 
 class SignupCubit extends Cubit<SignupState> {
-  SignupCubit({FirebaseAuth? auth})
-      : _auth = auth ?? FirebaseAuth.instance,
-        super(SignupInitial());
+  SignupCubit() : super(SignupInitial());
 
-  final FirebaseAuth _auth;
-
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  // final FirebaseFirestore _fireStore=FirebaseFirestore.instance;
   Future<void> signUp({
     required String name,
     required String email,
@@ -17,17 +15,12 @@ class SignupCubit extends Cubit<SignupState> {
   }) async {
     emit(SignupLoading());
     try {
-      final credential = await _auth.createUserWithEmailAndPassword(
+      await _auth.createUserWithEmailAndPassword(
         email: email.trim(),
         password: password,
       );
-
-      await credential.user?.updateDisplayName(name.trim());
-      await credential.user?.reload();
-
+      await _auth.signOut();
       emit(SignupSuccess('Account created successfully.'));
-    } on FirebaseAuthException catch (e) {
-      emit(SignupFailure(e.message ?? 'Sign up failed.'));
     } catch (_) {
       emit(SignupFailure('Sign up failed.'));
     }

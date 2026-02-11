@@ -1,7 +1,4 @@
 import 'package:flutter/material.dart' hide SearchController;
-import 'package:get/get.dart';
-import 'package:lucide_icons/lucide_icons.dart';
-import '../../../core/widgets/quote_card.dart';
 
 class SearchView extends StatelessWidget {
   const SearchView({super.key});

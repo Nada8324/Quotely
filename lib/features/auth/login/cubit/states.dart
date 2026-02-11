@@ -14,3 +14,7 @@ LoginSuccess(this.message);
    final String message;
    LoginFailure(this.message);
  }
+class PasswordResetEmailSent extends LoginState {
+  final String message;
+  PasswordResetEmailSent(this.message);
+}

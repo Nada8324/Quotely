@@ -32,10 +32,12 @@ class _LoginViewState extends State<LoginView> {
 
   Future<void> _openResetDialog(BuildContext context) async {
     final resetController = TextEditingController(text: _emailController.text);
+
     await showDialog<void>(
       context: context,
-      builder: (context) {
+      builder: (BuildContext dialogContext) {
         return AlertDialog(
+          backgroundColor: AppColors.lightOrange,
           title: const Text('Reset Password'),
           content: TextField(
             controller: resetController,
@@ -47,15 +49,21 @@ class _LoginViewState extends State<LoginView> {
           ),
           actions: [
             TextButton(
-              onPressed: () => Navigator.of(context).pop(),
+              onPressed: () => Navigator.of(dialogContext).pop(),
               child: const Text('Cancel'),
             ),
             ElevatedButton(
-              onPressed: () {
-                context
-                    .read<LoginCubit>()
-                    .sendPasswordResetEmail(resetController.text);
-                Navigator.of(context).pop();
+              onPressed: () async {
+                final email = resetController.text.trim();
+                if (email.isEmpty) {
+                  return;
+                }
+
+                await context.read<LoginCubit>().sendPasswordResetEmail(email);
+
+                if (dialogContext.mounted) {
+                  Navigator.of(dialogContext).pop();
+                }
               },
               child: const Text('Send'),
             ),
@@ -63,7 +71,9 @@ class _LoginViewState extends State<LoginView> {
         );
       },
     );
-    resetController.dispose();
+    Future.delayed(const Duration(milliseconds: 500), () {
+      resetController.dispose();
+    });
   }
 
   @override
@@ -99,6 +109,15 @@ class _LoginViewState extends State<LoginView> {
                       ),
                     );
                   }
+                  if (state is PasswordResetEmailSent) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(state.message),
+                        backgroundColor: Colors.blue,
+                        duration: const Duration(seconds: 5),
+                      ),
+                    );
+                  }
                 },
                 builder: (context, state) {
                   final isLoading = state is LoginLoading;
@@ -108,19 +127,20 @@ class _LoginViewState extends State<LoginView> {
                     child: Column(
                       children: [
                         const SizedBox(height: 24),
-                        const Text(
-                          'Quotely',
-                          style: TextStyle(
-                            fontSize: 36,
-                            fontWeight: FontWeight.w700,
-                            color: Color(0xFF111827),
-                          ),
-                        ),
-                        const SizedBox(height: 8),
-                        const Text(
-                          'Login to continue',
-                          style: TextStyle(fontSize: 14, color: Color(0xFF6B7280)),
-                        ),
+                         const Text(
+                    "Quotely",
+                    style: TextStyle(
+                      fontSize: 36,
+                      fontWeight: FontWeight.w600,
+                      color: Color(0xFF111827),
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  const Text(
+                    "Your Daily Dose of Inspiration",
+                    style: TextStyle(fontSize: 14, color: Color(0xFF6B7280)),
+                  ),
+
                         const SizedBox(height: 40),
                         InputField(
                           label: 'Email',
@@ -157,8 +177,9 @@ class _LoginViewState extends State<LoginView> {
                         Align(
                           alignment: Alignment.centerRight,
                           child: TextButton(
-                            onPressed:
-                                isLoading ? null : () => _openResetDialog(context),
+                            onPressed: isLoading
+                                ? null
+                                : () => _openResetDialog(context),
                             child: const Text('Forgot Password?'),
                           ),
                         ),
@@ -170,11 +191,12 @@ class _LoginViewState extends State<LoginView> {
                             onPressed: isLoading
                                 ? null
                                 : () {
-                                    if (!_formKey.currentState!.validate()) return;
+                                    if (!_formKey.currentState!.validate())
+                                      return;
                                     context.read<LoginCubit>().login(
-                                          email: _emailController.text,
-                                          password: _passwordController.text,
-                                        );
+                                      email: _emailController.text,
+                                      password: _passwordController.text,
+                                    );
                                   },
                             style: ElevatedButton.styleFrom(
                               backgroundColor: AppColors.primaryOrange,
