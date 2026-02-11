@@ -1,60 +1,126 @@
-// import 'package:asseigment/core/data/models/favorite_model.dart';
-// import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:graduation_project_nti/core/data/models/collection_model.dart';
+import 'package:graduation_project_nti/core/data/models/favorite_model.dart';
+import 'package:graduation_project_nti/core/data/models/quote_model.dart';
+import 'package:graduation_project_nti/core/data/models/user_model.dart';
 
-// class FavoritesRemoteDataSource {
-//   final FirebaseFirestore firestore;
+class FavoritesRemoteDataSource {
+  FavoritesRemoteDataSource({FirebaseFirestore? firestore, FirebaseAuth? auth})
+    : _firestore = firestore ?? FirebaseFirestore.instance,
+      _auth = auth ?? FirebaseAuth.instance;
 
-//   FavoritesRemoteDataSource(this.firestore);
+  final FirebaseFirestore _firestore;
+  final FirebaseAuth _auth;
 
-//   Future<List<Map<String, dynamic>>> getFavorites(String userId) async {
-//     final snapshot = await firestore
-//         .collection('favorites')
-//         .where('user_id', isEqualTo: userId)
-//         .get();
+  String get currentUserId => _auth.currentUser!.uid;
 
-//     return snapshot.docs
-//         .map((doc) => {
-//               'id': doc.id,
-//               ...doc.data(),
-//             })
-//         .toList();
-//   }
+  CollectionReference<Map<String, dynamic>> get _profiles =>
+      _firestore.collection('profiles');
 
-//   Future<FavoriteQuoteModel> addFavorite({
-//     required String userId,
-//     required String quoteId,
-//     required String quote,
-//     required String author,
-//     required List<String> categories,
-//   }) async {
-//     final doc = await firestore.collection('favorites').add({
-//       'user_id': userId,
-//       'quote_id': quoteId,
-//       'quote': quote,
-//       'author': author,
-//       'categories': categories,
-//     });
+  CollectionReference<Map<String, dynamic>> get _favorites =>
+      _profiles.doc(currentUserId).collection('favorites');
 
-//     final saved = await doc.get();
+  CollectionReference<Map<String, dynamic>> get _collections =>
+      _profiles.doc(currentUserId).collection('collections');
 
-//     return FavoriteQuoteModel.fromJson({
-//       'id': saved.id,
-//       ...saved.data() ?? {},
-//     });
-//   }
+  Future<void> addProfile({
+    required String uid,
+    required String name,
+    required String email,
+  }) {
+    return _profiles.doc(uid).set({
+      'uid': uid,
+      'name': name,
+      'email': email,
+    }, SetOptions(merge: true));
+  }
 
-//   Future<void> removeFavorite({
-//     required String userId,
-//     required String quoteId,
-//   }) async {
-//     final snapshot = await firestore
-//         .collection('favorites')
-//         .where('user_id', isEqualTo: userId)
-//         .where('quote_id', isEqualTo: quoteId)
-//         .get();
+  Future<UserModel?> getProfile() async {
+    final doc = await _profiles.doc(currentUserId).get();
+    if (!doc.exists) return null;
+    return UserModel.fromJson(doc.data()!);
+  }
 
-//     for (final doc in snapshot.docs) {
-//       await doc.reference.delete();
-//     }
-//   }
-// }
+  Future<void> updateProfile({
+    required String name,
+    required String email,
+  }) async {
+    await _profiles.doc(currentUserId).set({
+      'uid': currentUserId,
+      'name': name,
+      'email': email,
+      'updated_at': FieldValue.serverTimestamp(),
+    }, SetOptions(merge: true));
+  }
+
+  Stream<List<FavoriteQuoteModel>> watchFavorites() {
+    return _favorites.orderBy('created_at', descending: true).snapshots().map((
+      snapshot,
+    ) {
+      return snapshot.docs
+          .map(
+            (doc) => FavoriteQuoteModel.fromJson({'id': doc.id, ...doc.data()}),
+          )
+          .toList();
+    });
+  }
+
+  Future<void> toggleFavorite(QuoteModel quote) async {
+    final docRef = _favorites.doc(quote.id);
+    final doc = await docRef.get();
+    if (doc.exists) {
+      await docRef.delete();
+      return;
+    }
+    await docRef.set({
+      'quote_id': quote.id,
+      'quote': quote.quote,
+      'author': quote.author,
+      'categories': quote.categories,
+      'created_at': FieldValue.serverTimestamp(),
+    });
+  }
+
+  Stream<List<QuoteCollectionModel>> watchCollections() {
+    return _collections.orderBy('created_at', descending: true).snapshots().map(
+      (snapshot) {
+        return snapshot.docs
+            .map(
+              (doc) =>
+                  QuoteCollectionModel.fromJson({'id': doc.id, ...doc.data()}),
+            )
+            .toList();
+      },
+    );
+  }
+
+  Future<void> createCollection(String name) async {
+    await _collections.add({
+      'name': name,
+      'quote_ids': <String>[],
+      'created_at': FieldValue.serverTimestamp(),
+    });
+  }
+
+  Future<void> deleteCollection(String collectionId) async {
+    await _collections.doc(collectionId).delete();
+  }
+
+  Future<void> toggleQuoteInCollection({
+    required String collectionId,
+    required String quoteId,
+  }) async {
+    final docRef = _collections.doc(collectionId);
+    final snap = await docRef.get();
+    if (!snap.exists) return;
+    final data = snap.data() ?? {};
+    final quoteIds = List<String>.from(data['quote_ids'] ?? const []);
+    if (quoteIds.contains(quoteId)) {
+      quoteIds.remove(quoteId);
+    } else {
+      quoteIds.add(quoteId);
+    }
+    await docRef.update({'quote_ids': quoteIds});
+  }
+}

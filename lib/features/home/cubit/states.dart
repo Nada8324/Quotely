@@ -14,13 +14,13 @@ class HomeLoading extends HomeState {
   });
 }
 
-class HomeLoaded extends HomeState {
+class HomeSuccess extends HomeState {
   final String selectedCategory;
   final List<String> categories;
   final List<QuoteModel> quotes;
   final Set<String> favoriteIds;
 
-  HomeLoaded({
+  HomeSuccess({
     required this.selectedCategory,
     required this.categories,
     required this.quotes,
@@ -28,18 +28,10 @@ class HomeLoaded extends HomeState {
   });
 }
 
-class HomeError extends HomeState {
-  final String selectedCategory;
-  final List<String> categories;
-  final List<QuoteModel> quotes;
-  final Set<String> favoriteIds;
+class HomeError extends HomeState { 
   final String message;
 
   HomeError({
-    required this.selectedCategory,
-    required this.categories,
-    required this.quotes,
-    required this.favoriteIds,
     required this.message,
   });
 }

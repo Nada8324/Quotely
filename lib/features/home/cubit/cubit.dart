@@ -60,7 +60,7 @@ class HomeCubit extends Cubit<HomeState> {
       _quotes = quotes;
 
       emit(
-        HomeLoaded(
+        HomeSuccess(
           selectedCategory: _selectedCategory,
           categories: _categories,
           quotes: _quotes,
@@ -70,10 +70,6 @@ class HomeCubit extends Cubit<HomeState> {
     } catch (_) {
       emit(
         HomeError(
-          selectedCategory: _selectedCategory,
-          categories: _categories,
-          quotes: _quotes,
-          favoriteIds: _favoriteIds,
           message: 'Failed to load quotes. Please try again.',
         ),
       );
@@ -98,7 +94,7 @@ class HomeCubit extends Cubit<HomeState> {
     }
 
     emit(
-      HomeLoaded(
+      HomeSuccess(
         selectedCategory: _selectedCategory,
         categories: _categories,
         quotes: _quotes,

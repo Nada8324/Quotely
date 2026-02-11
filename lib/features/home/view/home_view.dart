@@ -29,7 +29,6 @@ class HomeView extends StatelessWidget {
           final selectedCategory = _selectedCategoryFromState(state);
           final categories = _categoriesFromState(context, state);
           final quotes = _quotesFromState(state);
-          final favoriteIds = _favoriteIdsFromState(state);
           final isLoading = state is HomeLoading;
           return Column(
             children: [
@@ -44,7 +43,7 @@ class HomeView extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text('QuoteVault', style: TextStyle(fontSize: 24)),
+                    const Text('Quotely', style: TextStyle(fontSize: 24)),
                     const SizedBox(height: 20),
                     SizedBox(
                       height: 48,
@@ -106,7 +105,6 @@ class HomeView extends StatelessWidget {
                           itemCount: quotes.length,
                           itemBuilder: (context, index) {
                             final quote = quotes[index];
-                            final isFav = favoriteIds.contains(quote.id);
                             return Padding(
                               padding: const EdgeInsets.symmetric(
                                 horizontal: 16,
@@ -115,7 +113,7 @@ class HomeView extends StatelessWidget {
                               child: QuoteCard(
                                 quote: quote,
                                 fontSize: 18,
-                                isFavorite: isFav,
+                                isFavorite:  favoriteState.favoriteIds.contains(quote.id),,
                                 onToggleFavorite: context
                                     .read<HomeCubit>()
                                     .toggleFavorite,
@@ -134,27 +132,23 @@ class HomeView extends StatelessWidget {
 
   String _selectedCategoryFromState(HomeState state) {
     if (state is HomeLoading) return state.selectedCategory;
-    if (state is HomeLoaded) return state.selectedCategory;
-    if (state is HomeError) return state.selectedCategory;
+    if (state is HomeSuccess) return state.selectedCategory;
     return 'All';
   }
 
   List<String> _categoriesFromState(BuildContext context, HomeState state) {
     if (state is HomeLoading) return state.categories;
-    if (state is HomeLoaded) return state.categories;
-    if (state is HomeError) return state.categories;
+    if (state is HomeSuccess) return state.categories;
     return context.read<HomeCubit>().categories;
   }
 
   List<QuoteModel> _quotesFromState(HomeState state) {
-    if (state is HomeLoaded) return state.quotes;
-    if (state is HomeError) return state.quotes;
+    if (state is HomeSuccess) return state.quotes;
     return const [];
   }
 
   Set<String> _favoriteIdsFromState(HomeState state) {
-    if (state is HomeLoaded) return state.favoriteIds;
-    if (state is HomeError) return state.favoriteIds;
+    if (state is HomeSuccess) return state.favoriteIds;
     return const {};
   }
 }
