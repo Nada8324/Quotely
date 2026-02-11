@@ -7,18 +7,20 @@ class QuotesRemoteDataSource {
   static const String _baseUrl = 'https://api.api-ninjas.com/v2/quotes';
   static final String? _apiKey = dotenv.env['QUOTES_API_KEY'];
 
-Future<List<QuoteModel>> getRandomQuotes({String? category,int? limit}) async {
+  Future<List<QuoteModel>> getRandomQuotes({
+    String? category,
+    int? limit,
+  }) async {
     final queryParameters = {
-      if (category != null && category != 'All') 'category': category,
+      if (category != null && category != 'All') 'categories': category,
       if (limit != null) 'limit': limit.toString(),
     };
 
-    final uri =  Uri.parse(_baseUrl).replace(queryParameters: queryParameters);
+    final uri = Uri.parse(
+      'https://api.api-ninjas.com/v2/randomquotes',
+    ).replace(queryParameters: queryParameters);
 
-    final response = await http.get(
-      uri,
-      headers: {'X-Api-Key': _apiKey ?? ""},
-    );
+    final response = await http.get(uri, headers: {'X-Api-Key': _apiKey ?? ""});
 
     if (response.statusCode == 200) {
       List<dynamic> data = json.decode(response.body);
@@ -27,12 +29,19 @@ Future<List<QuoteModel>> getRandomQuotes({String? category,int? limit}) async {
       throw Exception('Failed to load random quotes');
     }
   }
-  Future<List<QuoteModel>> getQuotes({String? category,String? author ,int? limit,int?offset}) async {
+
+  Future<List<QuoteModel>> getQuotes({
+    String? category,
+    String? author,
+    int? limit,
+    int? offset,
+  }) async {
     final queryParams = <String, String>{
-      if (category != null) 'categories': category.toLowerCase(),
-      if(author!= null)'author' : author,
+      if (category != null && category != 'All')
+        'categories': category.toLowerCase(),
+      'author': ?author,
       if (limit != null) 'limit': limit.toString(),
-      if(offset!=null) 'offset':offset.toString(),
+      if (offset != null) 'offset': offset.toString(),
     };
 
     final uri = Uri.parse(_baseUrl).replace(queryParameters: queryParams);
