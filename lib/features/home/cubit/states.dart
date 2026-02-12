@@ -18,13 +18,11 @@ class HomeSuccess extends HomeState {
   final String selectedCategory;
   final List<String> categories;
   final List<QuoteModel> quotes;
-  final Set<String> favoriteIds;
 
   HomeSuccess({
     required this.selectedCategory,
     required this.categories,
     required this.quotes,
-    required this.favoriteIds,
   });
 }
 

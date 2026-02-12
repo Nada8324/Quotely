@@ -6,12 +6,8 @@ import 'package:graduation_project_nti/core/data/models/quote_model.dart';
 import 'package:graduation_project_nti/core/data/models/user_model.dart';
 
 class FavoritesRemoteDataSource {
-  FavoritesRemoteDataSource({FirebaseFirestore? firestore, FirebaseAuth? auth})
-    : _firestore = firestore ?? FirebaseFirestore.instance,
-      _auth = auth ?? FirebaseAuth.instance;
-
-  final FirebaseFirestore _firestore;
-  final FirebaseAuth _auth;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
 
   String get currentUserId => _auth.currentUser!.uid;
 
@@ -24,45 +20,18 @@ class FavoritesRemoteDataSource {
   CollectionReference<Map<String, dynamic>> get _collections =>
       _profiles.doc(currentUserId).collection('collections');
 
-  Future<void> addProfile({
-    required String uid,
-    required String name,
-    required String email,
-  }) {
-    return _profiles.doc(uid).set({
-      'uid': uid,
-      'name': name,
-      'email': email,
-    }, SetOptions(merge: true));
-  }
-
   Future<UserModel?> getProfile() async {
     final doc = await _profiles.doc(currentUserId).get();
     if (!doc.exists) return null;
     return UserModel.fromJson(doc.data()!);
   }
 
-  Future<void> updateProfile({
-    required String name,
-    required String email,
-  }) async {
-    await _profiles.doc(currentUserId).set({
-      'uid': currentUserId,
-      'name': name,
-      'email': email,
-      'updated_at': FieldValue.serverTimestamp(),
-    }, SetOptions(merge: true));
-  }
-
   Stream<List<FavoriteQuoteModel>> watchFavorites() {
-    return _favorites.orderBy('created_at', descending: true).snapshots().map((
-      snapshot,
-    ) {
-      return snapshot.docs
-          .map(
-            (doc) => FavoriteQuoteModel.fromJson({'id': doc.id, ...doc.data()}),
-          )
-          .toList();
+    return _favorites.snapshots().map((snapshot) {
+      return snapshot.docs.map((doc) {
+        final data = doc.data();
+        return FavoriteQuoteModel.fromJson(data);
+      }).toList();
     });
   }
 
@@ -73,13 +42,15 @@ class FavoritesRemoteDataSource {
       await docRef.delete();
       return;
     }
-    await docRef.set({
-      'quote_id': quote.id,
-      'quote': quote.quote,
-      'author': quote.author,
-      'categories': quote.categories,
-      'created_at': FieldValue.serverTimestamp(),
-    });
+    await docRef.set(
+      FavoriteQuoteModel(
+        quoteId: quote.id,
+        quote: quote.quote,
+        author: quote.author,
+        categories: quote.categories,
+        createdAt: null,
+      ).toJson(),
+    );
   }
 
   Stream<List<QuoteCollectionModel>> watchCollections() {

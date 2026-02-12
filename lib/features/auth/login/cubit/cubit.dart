@@ -13,9 +13,13 @@ class LoginCubit extends Cubit<LoginState> {
         email: email.trim(),
         password: password,
       );
-      emit(LoginSuccess('Logged in successfully.'));
+      if (!isClosed) {
+        emit(LoginSuccess('Logged in successfully.'));
+      }
     } catch (_) {
-      emit(LoginFailure('Login failed.'));
+      if (!isClosed) {
+        emit(LoginFailure('Login failed.'));
+      }
     }
   }
 

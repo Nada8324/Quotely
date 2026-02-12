@@ -127,19 +127,22 @@ class _LoginViewState extends State<LoginView> {
                     child: Column(
                       children: [
                         const SizedBox(height: 24),
-                         const Text(
-                    "Quotely",
-                    style: TextStyle(
-                      fontSize: 36,
-                      fontWeight: FontWeight.w600,
-                      color: Color(0xFF111827),
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  const Text(
-                    "Your Daily Dose of Inspiration",
-                    style: TextStyle(fontSize: 14, color: Color(0xFF6B7280)),
-                  ),
+                        const Text(
+                          "Quotely",
+                          style: TextStyle(
+                            fontSize: 36,
+                            fontWeight: FontWeight.w600,
+                            color: Color(0xFF111827),
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        const Text(
+                          "Your Daily Dose of Inspiration",
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: Color(0xFF6B7280),
+                          ),
+                        ),
 
                         const SizedBox(height: 40),
                         InputField(
@@ -191,8 +194,10 @@ class _LoginViewState extends State<LoginView> {
                             onPressed: isLoading
                                 ? null
                                 : () {
-                                    if (!_formKey.currentState!.validate())
+                                    FocusScope.of(context).unfocus();
+                                    if (!_formKey.currentState!.validate()) {
                                       return;
+                                    }
                                     context.read<LoginCubit>().login(
                                       email: _emailController.text,
                                       password: _passwordController.text,

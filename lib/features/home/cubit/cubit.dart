@@ -1,4 +1,4 @@
-import 'dart:math';
+//import 'dart:math';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:graduation_project_nti/core/data/datasources/quotes_remote_datasource.dart';
@@ -11,7 +11,7 @@ class HomeCubit extends Cubit<HomeState> {
 
   final QuotesRemoteDataSource _dataSource = QuotesRemoteDataSource();
 
-  final List<String> _categories = const [
+  final List<String> categories = const [
     'All',
     'Wisdom',
     'Philosophy',
@@ -37,42 +37,33 @@ class HomeCubit extends Cubit<HomeState> {
 
   String _selectedCategory = 'All';
   List<QuoteModel> _quotes = [];
-  Set<String> _favoriteIds = {};
-
-  List<String> get categories => _categories;
 
   Future<void> loadInitialQuotes() async {
     if (_quotes.isNotEmpty) return;
-    await fetchQuotes(refresh: true);
+    await fetchQuotes();
   }
 
-  Future<void> fetchQuotes({required bool refresh}) async {
+  Future<void> fetchQuotes() async {
     emit(
-      HomeLoading(selectedCategory: _selectedCategory, categories: _categories),
+      HomeLoading(selectedCategory: _selectedCategory, categories: categories),
     );
 
     try {
-      final quotes = await _dataSource.getQuotes(
+      _quotes = await _dataSource.getQuotes(
         category: _selectedCategory,
         limit: 100,
       );
-      // quotes.shuffle(Random());
-      _quotes = quotes;
+      // _quotes.shuffle(Random());
 
       emit(
         HomeSuccess(
           selectedCategory: _selectedCategory,
-          categories: _categories,
+          categories: categories,
           quotes: _quotes,
-          favoriteIds: _favoriteIds,
         ),
       );
     } catch (_) {
-      emit(
-        HomeError(
-          message: 'Failed to load quotes. Please try again.',
-        ),
-      );
+      emit(HomeError(message: 'Failed to load quotes. Please try again.'));
     }
   }
 
@@ -80,26 +71,6 @@ class HomeCubit extends Cubit<HomeState> {
     if (category == _selectedCategory) return;
     _selectedCategory = category;
     _quotes = [];
-    emit(
-      HomeLoading(selectedCategory: _selectedCategory, categories: _categories),
-    );
-    await fetchQuotes(refresh: true);
-  }
-
-  void toggleFavorite(String quoteId) {
-    if (_favoriteIds.contains(quoteId)) {
-      _favoriteIds.remove(quoteId);
-    } else {
-      _favoriteIds.add(quoteId);
-    }
-
-    emit(
-      HomeSuccess(
-        selectedCategory: _selectedCategory,
-        categories: _categories,
-        quotes: _quotes,
-        favoriteIds: _favoriteIds,
-      ),
-    );
+    await fetchQuotes();
   }
 }

@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:graduation_project_nti/core/colors.dart';
 import 'package:graduation_project_nti/core/data/models/quote_model.dart';
 import 'package:graduation_project_nti/core/widgets/quote_card.dart';
 import 'package:graduation_project_nti/core/widgets/shimmer_loading.dart';
+import 'package:graduation_project_nti/features/favorites/cubit/cubit.dart';
+import 'package:graduation_project_nti/features/favorites/cubit/states.dart';
 import 'package:graduation_project_nti/features/home/cubit/cubit.dart';
 import 'package:graduation_project_nti/features/home/cubit/states.dart';
+import 'package:graduation_project_nti/features/home/widgets/home_header.dart';
 
 class HomeView extends StatelessWidget {
   const HomeView({super.key});
@@ -32,92 +34,46 @@ class HomeView extends StatelessWidget {
           final isLoading = state is HomeLoading;
           return Column(
             children: [
-              Container(
-                color: Colors.white,
-                padding: const EdgeInsets.only(
-                  top: 48,
-                  left: 16,
-                  right: 16,
-                  bottom: 16,
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text('Quotely', style: TextStyle(fontSize: 24)),
-                    const SizedBox(height: 20),
-                    SizedBox(
-                      height: 48,
-                      child: ListView.separated(
-                        scrollDirection: Axis.horizontal,
-                        itemCount: categories.length,
-                        separatorBuilder: (_, _) => const SizedBox(width: 8),
-                        itemBuilder: (context, index) {
-                          final category = categories[index];
-                          final isSelected = selectedCategory == category;
-
-                          return GestureDetector(
-                            onTap: () {
-                              context.read<HomeCubit>().changeCategory(
-                                category,
-                              );
-                            },
-                            child: Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 16,
-                                vertical: 8,
-                              ),
-                              decoration: BoxDecoration(
-                                color: isSelected
-                                    ? AppColors.primaryOrange
-                                    : const Color.fromARGB(29, 191, 190, 190),
-                                borderRadius: BorderRadius.circular(24),
-                              ),
-                              child: Center(
-                                child: Text(
-                                  category,
-                                  style: TextStyle(
-                                    color: isSelected
-                                        ? Colors.white
-                                        : Colors.black,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          );
-                        },
-                      ),
-                    ),
-                  ],
-                ),
+              HomeHeader(
+                categories: categories,
+                selectedCategory: selectedCategory,
               ),
-
               Expanded(
                 child: isLoading && quotes.isEmpty
                     ? buildLoadingShimmer()
                     : RefreshIndicator(
-                        onRefresh: () async {
-                          await context.read<HomeCubit>().fetchQuotes(
-                            refresh: true,
-                          );
-                        },
-                        child: ListView.builder(
-                          padding: const EdgeInsets.symmetric(vertical: 8),
-                          itemCount: quotes.length,
-                          itemBuilder: (context, index) {
-                            final quote = quotes[index];
-                            return Padding(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 16,
-                                vertical: 8,
-                              ),
-                              child: QuoteCard(
-                                quote: quote,
-                                fontSize: 18,
-                                isFavorite:  favoriteState.favoriteIds.contains(quote.id),,
-                                onToggleFavorite: context
-                                    .read<HomeCubit>()
-                                    .toggleFavorite,
-                              ),
+                        onRefresh: () =>
+                            context.read<HomeCubit>().fetchQuotes(),
+                        child: BlocBuilder<FavoritesCubit, FavoritesState>(
+                          builder: (context, favoritesState) {
+                            final Set<String> favoriteIds =
+                                favoritesState is FavoritesSuccess
+                                ? favoritesState.favoriteIds
+                                : {};
+
+                            return ListView.builder(
+                              padding: const EdgeInsets.symmetric(vertical: 8),
+                              itemCount: quotes.length,
+                              itemBuilder: (context, index) {
+                                final quote = quotes[index];
+                                print(favoriteIds);
+                                return Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 16,
+                                    vertical: 8,
+                                  ),
+                                  child: QuoteCard(
+                                    quote: quote,
+                                    fontSize: 18,
+                                    isFavorite: favoriteIds.contains(quote.id),
+                                    onToggleFavorite: (_) {
+                                      context
+                                          .read<FavoritesCubit>()
+                                          .toggleFavorite(quote);
+                                    },
+                                  ),
+                                );
+                              },
                             );
                           },
                         ),
@@ -139,16 +95,11 @@ class HomeView extends StatelessWidget {
   List<String> _categoriesFromState(BuildContext context, HomeState state) {
     if (state is HomeLoading) return state.categories;
     if (state is HomeSuccess) return state.categories;
-    return context.read<HomeCubit>().categories;
+    return [];
   }
 
   List<QuoteModel> _quotesFromState(HomeState state) {
     if (state is HomeSuccess) return state.quotes;
     return const [];
-  }
-
-  Set<String> _favoriteIdsFromState(HomeState state) {
-    if (state is HomeSuccess) return state.favoriteIds;
-    return const {};
   }
 }

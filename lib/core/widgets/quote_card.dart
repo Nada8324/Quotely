@@ -58,15 +58,10 @@ class QuoteCard extends StatelessWidget {
                       children: [
                         TweenAnimationBuilder<Color?>(
                           tween: ColorTween(
-                            begin: const Color.fromARGB(
-                              255,
-                              128,
-                              128,
-                              128,
-                            ), // رمادي
+                            begin: AppColors.grey,
                             end: isFavorite
                                 ? AppColors.primaryOrange
-                                : const Color.fromARGB(255, 128, 128, 128),
+                                :  AppColors.grey,
                           ),
                           duration: const Duration(milliseconds: 500),
                           builder: (context, color, child) {
@@ -81,10 +76,10 @@ class QuoteCard extends StatelessWidget {
                         const SizedBox(width: 2),
                         TweenAnimationBuilder<Color?>(
                           tween: ColorTween(
-                            begin: const Color.fromARGB(255, 128, 128, 128),
+                            begin: AppColors.grey,
                             end: isFavorite
                                 ? AppColors.primaryOrange
-                                : const Color.fromARGB(255, 128, 128, 128),
+                                :  AppColors.grey,
                           ),
                           duration: const Duration(milliseconds: 500),
                           builder: (context, color, child) {
@@ -114,13 +109,13 @@ class QuoteCard extends StatelessWidget {
                       children: [
                         Icon(
                           Icons.share_outlined,
-                          color: const Color.fromARGB(255, 128, 128, 128),
+                          color: AppColors.grey,
                         ),
                         SizedBox(width: 2),
                         Text(
                           "Share",
                           style: TextStyle(
-                            color: const Color.fromARGB(255, 128, 128, 128),
+                            color: AppColors.grey,
                           ),
                         ),
                       ],

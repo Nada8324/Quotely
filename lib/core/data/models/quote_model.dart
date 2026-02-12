@@ -6,7 +6,7 @@ class QuoteModel {
   final List<String> categories;
 
   QuoteModel({
-     required this.id,
+    required this.id,
     required this.quote,
     required this.author,
     required this.work,

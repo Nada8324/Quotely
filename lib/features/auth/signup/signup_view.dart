@@ -62,9 +62,7 @@ class _SignupViewState extends State<SignupView> {
                         backgroundColor: Colors.green,
                       ),
                     );
-                    Navigator.of(
-                      context,
-                    ).pop(); 
+                    Navigator.of(context).pop();
                   }
                 },
                 builder: (context, state) {
@@ -150,6 +148,7 @@ class _SignupViewState extends State<SignupView> {
                             onPressed: isLoading
                                 ? null
                                 : () {
+                                    FocusScope.of(context).unfocus();
                                     if (_formKey.currentState!.validate()) {
                                       context.read<SignupCubit>().signUp(
                                         name: _nameController.text,
