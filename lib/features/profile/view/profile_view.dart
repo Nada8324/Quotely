@@ -18,23 +18,25 @@ class ProfileView extends StatelessWidget {
           ),
         ],
       ),
-      body: ListView(
-        padding: const EdgeInsets.all(16),
-        children: [
-          CircleAvatar(
-            radius: 40,
-            backgroundImage: (user?.photoURL?.isNotEmpty ?? false)
-                ? NetworkImage(user!.photoURL!)
-                : null,
-            child: (user?.photoURL?.isEmpty ?? true)
-                ? const Icon(Icons.person, size: 40)
-                : null,
-          ),
-          const SizedBox(height: 16),
-          Text('Name: ${user?.displayName ?? '-'}'),
-          const SizedBox(height: 8),
-          Text('Email: ${user?.email ?? '-'}'),
-        ],
+      body: SafeArea(
+        child: ListView(
+          padding: const EdgeInsets.all(16),
+          children: [
+            CircleAvatar(
+              radius: 40,
+              backgroundImage: (user?.photoURL?.isNotEmpty ?? false)
+                  ? NetworkImage(user!.photoURL!)
+                  : null,
+              child: (user?.photoURL?.isEmpty ?? true)
+                  ? const Icon(Icons.person, size: 40)
+                  : null,
+            ),
+            const SizedBox(height: 16),
+            Text('Name: ${user?.displayName ?? '-'}'),
+            const SizedBox(height: 8),
+            Text('Email: ${user?.email ?? '-'}'),
+          ],
+        ),
       ),
     );
   }

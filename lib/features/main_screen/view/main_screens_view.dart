@@ -22,7 +22,7 @@ class _MainScreenState extends State<MainScreen> {
     HomeView(),
     SearchView(),
     DailyView(),
-    CollectionsView(),
+    FavoritesView(),
     ProfileView(),
   ];
   @override

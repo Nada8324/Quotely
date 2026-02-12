@@ -11,7 +11,7 @@ class BottomNav extends StatelessWidget {
     {'icon': LucideIcons.home, 'label': 'Home'},
     {'icon': LucideIcons.search, 'label': 'Search'},
     {'icon': LucideIcons.quote, 'label': 'Daily'},
-    {'icon': LucideIcons.folder, 'label': 'Collections'},
+    {'icon': LucideIcons.heart, 'label': 'Favorites'},
     {'icon': LucideIcons.user, 'label': 'Profile'},
   ];
 

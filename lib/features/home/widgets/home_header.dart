@@ -15,13 +15,18 @@ class HomeHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Colors.white,
-      padding: const EdgeInsets.only(top: 48, left: 16, right: 16, bottom: 16),
+      color: Colors.transparent,
+      padding: const EdgeInsets.all(16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text('Quotely', style: TextStyle(fontSize: 24)),
-          const SizedBox(height: 20),
+          Center(
+            child: const Text(
+              'Quotely',
+              style: TextStyle(fontSize: 35, fontWeight: .w600),
+            ),
+          ),
+          const SizedBox(height: 10),
           SizedBox(
             height: 48,
             child: ListView.separated(
