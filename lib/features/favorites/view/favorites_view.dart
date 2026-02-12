@@ -330,7 +330,6 @@ class _CollectionsViewState extends State<FavoritesView> {
                             child: Padding(
                               padding: const EdgeInsets.all(14),
                               child: Row(
-                                //spacing: .infinity,
                                 children: [
                                   Expanded(
                                     child: Column(
