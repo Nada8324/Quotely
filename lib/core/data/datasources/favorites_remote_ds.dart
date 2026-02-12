@@ -3,7 +3,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:graduation_project_nti/core/data/models/collection_model.dart';
 import 'package:graduation_project_nti/core/data/models/favorite_model.dart';
 import 'package:graduation_project_nti/core/data/models/quote_model.dart';
-import 'package:graduation_project_nti/core/data/models/user_model.dart';
 
 class FavoritesRemoteDataSource {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -11,20 +10,15 @@ class FavoritesRemoteDataSource {
 
   String get currentUserId => _auth.currentUser!.uid;
 
-  CollectionReference<Map<String, dynamic>> get _profiles =>
-      _firestore.collection('profiles');
+  CollectionReference<Map<String, dynamic>> get _favorites => _firestore
+      .collection('profiles')
+      .doc(currentUserId)
+      .collection('favorites');
 
-  CollectionReference<Map<String, dynamic>> get _favorites =>
-      _profiles.doc(currentUserId).collection('favorites');
-
-  CollectionReference<Map<String, dynamic>> get _collections =>
-      _profiles.doc(currentUserId).collection('collections');
-
-  Future<UserModel?> getProfile() async {
-    final doc = await _profiles.doc(currentUserId).get();
-    if (!doc.exists) return null;
-    return UserModel.fromJson(doc.data()!);
-  }
+  CollectionReference<Map<String, dynamic>> get _collections => _firestore
+      .collection('profiles')
+      .doc(currentUserId)
+      .collection('collections');
 
   Stream<List<FavoriteQuoteModel>> watchFavorites() {
     return _favorites.snapshots().map((snapshot) {
@@ -40,6 +34,15 @@ class FavoritesRemoteDataSource {
     final doc = await docRef.get();
     if (doc.exists) {
       await docRef.delete();
+      final collectionsWithQuote = await _collections
+          .where('quote_ids', arrayContains: quote.id)
+          .get();
+
+      for (final collectionDoc in collectionsWithQuote.docs) {
+        await collectionDoc.reference.update({
+          'quote_ids': FieldValue.arrayRemove([quote.id]),
+        });
+      }
       return;
     }
     await docRef.set(
