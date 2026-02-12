@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:graduation_project_nti/features/daily_quote/view/daily_quote_widget.dart';
 import 'package:graduation_project_nti/features/favorites/cubit/cubit.dart';
-import 'package:graduation_project_nti/features/favorites/view/collections_view.dart';
+import 'package:graduation_project_nti/features/favorites/view/favorites_view.dart';
 import 'package:graduation_project_nti/features/home/cubit/cubit.dart';
 import 'package:graduation_project_nti/features/home/view/home_view.dart';
 import 'package:graduation_project_nti/features/profile/view/profile_view.dart';
