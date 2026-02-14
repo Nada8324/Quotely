@@ -7,6 +7,7 @@ import 'package:graduation_project_nti/features/home/cubit/cubit.dart';
 import 'package:graduation_project_nti/features/home/view/home_view.dart';
 import 'package:graduation_project_nti/features/profile/cubit/cubit.dart';
 import 'package:graduation_project_nti/features/profile/view/profile_view.dart';
+import 'package:graduation_project_nti/features/search/cubit/cubit.dart';
 import 'package:graduation_project_nti/features/search/view/search_view.dart';
 import '../../../core/widgets/bottom_nav_bar.dart';
 
@@ -37,6 +38,10 @@ class _MainScreenState extends State<MainScreen> {
         BlocProvider(
           create: (context) => FavoritesCubit()..startWatching(),
           child: FavoritesView(),
+        ),
+         BlocProvider(
+          create: (context) => SearchCubit()..loadInitialQuotes(),
+          child: SearchView(),
         ),
         BlocProvider(create: (context) => ProfileCubit(), child: ProfileView()),
       ],

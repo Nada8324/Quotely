@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:graduation_project_nti/core/colors.dart';
+import 'package:graduation_project_nti/core/widgets/show_confirmation_dialog.dart';
 import 'package:graduation_project_nti/features/profile/cubit/cubit.dart';
 import 'package:graduation_project_nti/features/profile/cubit/states.dart';
+import 'package:lucide_icons/lucide_icons.dart';
 
 class ProfileView extends StatelessWidget {
   const ProfileView({super.key});
@@ -26,11 +28,27 @@ class _ProfileBody extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Profile'),
+        actionsPadding: EdgeInsets.all(10),
+        title: const Text('  Profile'),
         backgroundColor: Colors.transparent,
         elevation: 0,
         actions: [
-          IconButton(icon: const Icon(Icons.logout), onPressed: cubit.logout),
+          IconButton(
+            icon: const Icon(LucideIcons.logOut, color: Colors.red),
+            onPressed: () async {
+              final confirmed = await showConfirmationDialog(
+                context: context,
+                title: 'Logout',
+                content: 'Are you sure you want to logout?',
+                confirmText: 'Logout',
+                cancelText: 'Cancel',
+              );
+
+              if (confirmed) {
+                cubit.logout;
+              }
+            },
+          ),
         ],
       ),
       extendBodyBehindAppBar: true,

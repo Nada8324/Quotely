@@ -1,4 +1,4 @@
-//import 'dart:math';
+import 'dart:math';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:graduation_project_nti/core/data/datasources/quotes_remote_datasource.dart';
@@ -53,7 +53,7 @@ class HomeCubit extends Cubit<HomeState> {
         category: _selectedCategory,
         limit: 100,
       );
-      // _quotes.shuffle(Random());
+      _quotes.shuffle(Random());
 
       emit(
         HomeSuccess(

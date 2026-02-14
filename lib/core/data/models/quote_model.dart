@@ -14,8 +14,8 @@ class QuoteModel {
   });
 
   factory QuoteModel.fromJson(Map<String, dynamic> json) {
-    final quote = json['quote'] ?? '';
-    final author = json['author'] ?? '';
+    final quote = json['quote'] ;
+    final author = json['author'];
 
     return QuoteModel(
       id: '${quote}_$author'.hashCode.toString(),

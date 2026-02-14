@@ -23,8 +23,7 @@ class FavoritesRemoteDataSource {
   Stream<List<FavoriteQuoteModel>> watchFavorites() {
     return _favorites.snapshots().map((snapshot) {
       return snapshot.docs.map((doc) {
-        final data = doc.data();
-        return FavoriteQuoteModel.fromJson(data);
+        return FavoriteQuoteModel.fromJson(doc.data());
       }).toList();
     });
   }
@@ -60,21 +59,21 @@ class FavoritesRemoteDataSource {
     return _collections.orderBy('created_at', descending: true).snapshots().map(
       (snapshot) {
         return snapshot.docs
-            .map(
-              (doc) =>
-                  QuoteCollectionModel.fromJson({'id': doc.id, ...doc.data()}),
-            )
+            .map((doc) => QuoteCollectionModel.fromJson(doc.data()))
             .toList();
       },
     );
   }
 
   Future<void> createCollection(String name) async {
-    await _collections.add({
-      'name': name,
-      'quote_ids': <String>[],
-      'created_at': FieldValue.serverTimestamp(),
-    });
+    final doc = _collections.doc();
+    await doc.set(
+      QuoteCollectionModel(
+        id: doc.id,
+        name: name.trim(),
+        quoteIds: [],
+      ).toJson(),
+    );
   }
 
   Future<void> deleteCollection(String collectionId) async {
@@ -88,8 +87,8 @@ class FavoritesRemoteDataSource {
     final docRef = _collections.doc(collectionId);
     final snap = await docRef.get();
     if (!snap.exists) return;
-    final data = snap.data() ?? {};
-    final quoteIds = List<String>.from(data['quote_ids'] ?? const []);
+    final data = snap.data();
+    final quoteIds = List<String>.from(data!['quote_ids'] ?? const []);
     if (quoteIds.contains(quoteId)) {
       quoteIds.remove(quoteId);
     } else {

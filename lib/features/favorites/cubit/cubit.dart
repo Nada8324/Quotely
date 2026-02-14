@@ -8,11 +8,9 @@ import 'package:graduation_project_nti/core/data/models/quote_model.dart';
 import 'package:graduation_project_nti/features/favorites/cubit/states.dart';
 
 class FavoritesCubit extends Cubit<FavoritesState> {
-  FavoritesCubit({FavoritesRemoteDataSource? remote})
-    : _remote = remote ?? FavoritesRemoteDataSource(),
-      super(FavoritesInitial());
+  FavoritesCubit() : super(FavoritesInitial());
 
-  final FavoritesRemoteDataSource _remote;
+  final FavoritesRemoteDataSource _remote = FavoritesRemoteDataSource();
 
   StreamSubscription? _favoritesSubscription;
   StreamSubscription? _collectionsSubscription;
@@ -26,11 +24,17 @@ class FavoritesCubit extends Cubit<FavoritesState> {
 
     _favoritesSubscription = _remote.watchFavorites().listen(
       (favorites) {
-        final List<QuoteCollectionModel>currentCollections = state is FavoritesSuccess
+        final List<QuoteCollectionModel> currentCollections =
+            state is FavoritesSuccess
             ? (state as FavoritesSuccess).collections
             : const [];
 
-        emit(FavoritesSuccess(favorites: favorites, collections: currentCollections));
+        emit(
+          FavoritesSuccess(
+            favorites: favorites,
+            collections: currentCollections,
+          ),
+        );
       },
       onError: (_) {
         emit(FavoritesFailure('Could not load favorites.'));
@@ -39,14 +43,20 @@ class FavoritesCubit extends Cubit<FavoritesState> {
 
     _collectionsSubscription = _remote.watchCollections().listen(
       (collections) {
-        final List<FavoriteQuoteModel> currentFavorites = state is FavoritesSuccess
+        final List<FavoriteQuoteModel> currentFavorites =
+            state is FavoritesSuccess
             ? (state as FavoritesSuccess).favorites
             : const [];
 
-        emit(FavoritesSuccess(favorites: currentFavorites, collections: collections));
+        emit(
+          FavoritesSuccess(
+            favorites: currentFavorites,
+            collections: collections,
+          ),
+        );
       },
-      onError: (_) {
-        emit(FavoritesFailure('Could not load collections.'));
+      onError: (e) {
+        emit(FavoritesFailure('Could not load collections. $e'));
       },
     );
   }
@@ -82,7 +92,10 @@ class FavoritesCubit extends Cubit<FavoritesState> {
     required String quoteId,
   }) async {
     try {
-      await _remote.toggleQuoteInCollection(collectionId: collectionId, quoteId: quoteId);
+      await _remote.toggleQuoteInCollection(
+        collectionId: collectionId,
+        quoteId: quoteId,
+      );
     } catch (_) {
       emit(FavoritesFailure('Could not update collection.'));
     }

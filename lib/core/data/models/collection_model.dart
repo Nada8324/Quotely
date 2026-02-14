@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class QuoteCollectionModel {
   final String id;
   final String name;
@@ -13,8 +15,8 @@ class QuoteCollectionModel {
 
   factory QuoteCollectionModel.fromJson(Map<String, dynamic> json) {
     return QuoteCollectionModel(
-      id: json['id'] as String,
-      name: json['name'] as String? ?? '',
+      id: json['id'],
+      name: json['name'],
       quoteIds: List<String>.from(json['quote_ids'] ?? const []),
       createdAt: DateTime.tryParse(json['created_at']?.toString() ?? ''),
     );
@@ -25,7 +27,7 @@ class QuoteCollectionModel {
       'id': id,
       'name': name,
       'quote_ids': quoteIds,
-      if (createdAt != null) 'created_at': createdAt!.toIso8601String(),
+      'created_at': FieldValue.serverTimestamp(),
     };
   }
 }

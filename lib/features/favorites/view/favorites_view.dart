@@ -4,6 +4,7 @@ import 'package:graduation_project_nti/core/colors.dart';
 import 'package:graduation_project_nti/core/data/models/favorite_model.dart';
 import 'package:graduation_project_nti/core/data/models/quote_model.dart';
 import 'package:graduation_project_nti/core/widgets/quote_card.dart';
+import 'package:graduation_project_nti/core/widgets/show_confirmation_dialog.dart';
 import 'package:graduation_project_nti/features/favorites/cubit/cubit.dart';
 import 'package:graduation_project_nti/features/favorites/cubit/states.dart';
 import 'package:graduation_project_nti/features/favorites/view/collection_details_view.dart';
@@ -17,7 +18,7 @@ class FavoritesView extends StatefulWidget {
 }
 
 class _CollectionsViewState extends State<FavoritesView> {
-  Future<void> _showCreateCollectionDialog(BuildContext context) async {
+  Future<void> showCreateCollectionDialog(BuildContext context) async {
     final controller = TextEditingController();
 
     await showDialog<void>(
@@ -64,7 +65,7 @@ class _CollectionsViewState extends State<FavoritesView> {
     );
   }
 
-  Future<void> _showAddToCollectionSheet(
+  Future<void> showAddToCollectionSheet(
     BuildContext context,
     FavoritesSuccess successState,
     FavoriteQuoteModel favorite,
@@ -107,15 +108,14 @@ class _CollectionsViewState extends State<FavoritesView> {
                           : Icons.add_circle_outline_rounded,
                       color: exists ? Colors.green : AppColors.primaryOrange,
                     ),
-                    onTap: () async {
-                      await context
-                          .read<FavoritesCubit>()
-                          .toggleQuoteInCollection(
-                            collectionId: collection.id,
-                            quoteId: favorite.quoteId,
-                          );
-                      if (sheetContext.mounted)
+                    onTap: () {
+                      context.read<FavoritesCubit>().toggleQuoteInCollection(
+                        collectionId: collection.id,
+                        quoteId: favorite.quoteId,
+                      );
+                      if (sheetContext.mounted) {
                         Navigator.of(sheetContext).pop();
+                      }
                     },
                   );
                 }),
@@ -127,7 +127,7 @@ class _CollectionsViewState extends State<FavoritesView> {
     );
   }
 
-  QuoteModel _quoteFromFavorite(FavoriteQuoteModel favorite) {
+  QuoteModel quoteFromFavorite(FavoriteQuoteModel favorite) {
     return QuoteModel(
       id: favorite.quoteId,
       quote: favorite.quote,
@@ -137,7 +137,7 @@ class _CollectionsViewState extends State<FavoritesView> {
     );
   }
 
-  bool _isInAnyCollection(FavoritesSuccess state, String quoteId) {
+  bool isInAnyCollection(FavoritesSuccess state, String quoteId) {
     for (final collection in state.collections) {
       if (collection.quoteIds.contains(quoteId)) return true;
     }
@@ -148,7 +148,7 @@ class _CollectionsViewState extends State<FavoritesView> {
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: () => _showCreateCollectionDialog(context),
+        onPressed: () => showCreateCollectionDialog(context),
         backgroundColor: AppColors.primaryOrange,
         foregroundColor: Colors.white,
         icon: const Icon(Icons.create_new_folder_outlined),
@@ -183,206 +183,224 @@ class _CollectionsViewState extends State<FavoritesView> {
                 return Center(child: Text(state.message));
               }
 
-              final successState = state as FavoritesSuccess;
-
-              return ListView(
-                padding: const EdgeInsets.fromLTRB(16, 16, 16, 90),
-                children: [
-                  const Center(
-                    child: Text(
-                      'Favorites',
-                      style: TextStyle(
-                        fontSize: 34,
-                        fontWeight: FontWeight.w600,
-                        color: Color(0xFF111827),
+              if (state is FavoritesSuccess) {
+                return ListView(
+                  padding: const EdgeInsets.fromLTRB(16, 16, 16, 90),
+                  children: [
+                    const Center(
+                      child: Text(
+                        'Favorites',
+                        style: TextStyle(
+                          fontSize: 34,
+                          fontWeight: FontWeight.w600,
+                          color: Color(0xFF111827),
+                        ),
                       ),
                     ),
-                  ),
-                  const SizedBox(height: 6),
-                  const Center(
-                    child: Text(
-                      'Save your favorite quotes in beautiful collections',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(fontSize: 14, color: Color(0xFF6B7280)),
-                    ),
-                  ),
-                  const SizedBox(height: 24),
-                  Text(
-                    'Favorite Quotes (${successState.favorites.length})',
-                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  if (successState.favorites.isEmpty)
-                    const Card(
-                      color: Colors.white,
-
-                      child: Padding(
-                        padding: EdgeInsets.all(12),
-                        child: Text('No favorites yet.'),
+                    const SizedBox(height: 6),
+                    const Center(
+                      child: Text(
+                        'Save your favorite quotes in beautiful collections',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: Color(0xFF6B7280),
+                        ),
                       ),
-                    )
-                  else
-                    ...successState.favorites.map((favorite) {
-                      final quoteModel = _quoteFromFavorite(favorite);
-                      final inCollection = _isInAnyCollection(
-                        successState,
-                        favorite.quoteId,
-                      );
+                    ),
+                    const SizedBox(height: 24),
+                    Text(
+                      'Favorite Quotes (${state.favorites.length})',
+                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    if (state.favorites.isEmpty)
+                      const Card(
+                        color: Colors.white,
 
-                      return Column(
-                        children: [
-                          QuoteCard(
-                            quote: quoteModel,
-                            fontSize: 18,
-                            isFavorite: true,
-                            onToggleFavorite: (_) {
-                              context.read<FavoritesCubit>().toggleFavorite(
-                                quoteModel,
+                        child: Padding(
+                          padding: EdgeInsets.all(12),
+                          child: Text('No favorites yet.'),
+                        ),
+                      )
+                    else
+                      ...state.favorites.map((favorite) {
+                        final QuoteModel quoteModel = quoteFromFavorite(
+                          favorite,
+                        );
+                        final bool inCollection = isInAnyCollection(
+                          state,
+                          favorite.quoteId,
+                        );
+
+                        return Column(
+                          children: [
+                            QuoteCard(
+                              quote: quoteModel,
+                              fontSize: 18,
+                              isFavorite: true,
+                              onToggleFavorite: (_) {
+                                context.read<FavoritesCubit>().toggleFavorite(
+                                  quoteModel,
+                                );
+                              },
+                            ),
+                            const SizedBox(height: 8),
+                            Align(
+                              alignment: Alignment.centerRight,
+                              child: inCollection
+                                  ? const Chip(
+                                      avatar: Icon(
+                                        Icons.check_circle,
+                                        color: Colors.green,
+                                        size: 18,
+                                      ),
+                                      label: Text('Added to collection'),
+                                    )
+                                  : OutlinedButton.icon(
+                                      onPressed: () => showAddToCollectionSheet(
+                                        context,
+                                        state,
+                                        favorite,
+                                      ),
+                                      icon: const Icon(
+                                        Icons.playlist_add_rounded,
+                                      ),
+                                      label: const Text('Add to collection'),
+                                    ),
+                            ),
+                            const SizedBox(height: 8),
+                          ],
+                        );
+                      }),
+                    const SizedBox(height: 14),
+                    Text(
+                      'Your Collections (${state.collections.length})',
+                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    if (state.collections.isEmpty)
+                      const Card(
+                        color: Colors.white,
+                        child: Padding(
+                          padding: EdgeInsets.all(12),
+                          child: Text('No collections yet.'),
+                        ),
+                      )
+                    else
+                      GridView.builder(
+                        itemCount: state.collections.length,
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 2,
+                              mainAxisSpacing: 10,
+                              crossAxisSpacing: 10,
+                              childAspectRatio: 1.2,
+                            ),
+                        itemBuilder: (context, index) {
+                          final collection = state.collections[index];
+                          return InkWell(
+                            onTap: () {
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (_) => BlocProvider.value(
+                                    value: context.read<FavoritesCubit>(),
+                                    child: CollectionDetailsView(
+                                      collection: collection,
+                                      favorites: state.favorites,
+                                    ),
+                                  ),
+                                ),
                               );
                             },
-                          ),
-                          const SizedBox(height: 8),
-                          Align(
-                            alignment: Alignment.centerRight,
-                            child: inCollection
-                                ? const Chip(
-                                    avatar: Icon(
-                                      Icons.check_circle,
-                                      color: Colors.green,
-                                      size: 18,
-                                    ),
-                                    label: Text('Added to collection'),
-                                  )
-                                : OutlinedButton.icon(
-                                    onPressed: () => _showAddToCollectionSheet(
-                                      context,
-                                      successState,
-                                      favorite,
-                                    ),
-                                    icon: const Icon(
-                                      Icons.playlist_add_rounded,
-                                    ),
-                                    label: const Text('Add to collection'),
-                                  ),
-                          ),
-                          const SizedBox(height: 8),
-                        ],
-                      );
-                    }),
-                  const SizedBox(height: 14),
-                  Text(
-                    'Your Collections (${successState.collections.length})',
-                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
-                  const SizedBox(height: 10),
-                  if (successState.collections.isEmpty)
-                    const Card(
-                      color: Colors.white,
-                      child: Padding(
-                        padding: EdgeInsets.all(12),
-                        child: Text('No collections yet.'),
-                      ),
-                    )
-                  else
-                    GridView.builder(
-                      itemCount: successState.collections.length,
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      gridDelegate:
-                          const SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 2,
-                            mainAxisSpacing: 10,
-                            crossAxisSpacing: 10,
-                            childAspectRatio: 1.2,
-                          ),
-                      itemBuilder: (context, index) {
-                        final collection = successState.collections[index];
-                        return InkWell(
-                          onTap: () {
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (_) => BlocProvider.value(
-                                  value: context.read<FavoritesCubit>(),
-                                  child: CollectionDetailsView(
-                                    collection: collection,
-                                    favorites: successState.favorites,
-                                  ),
-                                ),
-                              ),
-                            );
-                          },
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: AppColors.lightOrange,
-                              borderRadius: BorderRadius.circular(20),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black.withOpacity(0.05),
-                                  blurRadius: 12,
-                                  offset: const Offset(0, 4),
-                                ),
-                              ],
-                            ),
-                            child: Padding(
-                              padding: const EdgeInsets.all(14),
-                              child: Row(
-                                children: [
-                                  Expanded(
-                                    child: Column(
-                                      crossAxisAlignment: .start,
-
-                                      children: [
-                                        const Icon(
-                                          LucideIcons.folderHeart,
-                                          color: AppColors.primaryOrange,
-                                          size: 30,
-                                        ),
-                                        const SizedBox(height: 10),
-                                        Text(
-                                          collection.name,
-                                          maxLines: 1,
-                                          overflow: TextOverflow.ellipsis,
-                                          style: const TextStyle(
-                                            fontSize: 15,
-                                            fontWeight: FontWeight.w700,
-                                          ),
-                                        ),
-                                        const SizedBox(height: 2),
-                                        Text(
-                                          '${collection.quoteIds.length} quote(s)',
-                                          style: const TextStyle(
-                                            color: Color(0xFF6B7280),
-                                            fontSize: 12,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  IconButton(
-                                    icon: const Icon(
-                                      LucideIcons.trash2,
-                                      size: 30,
-                                      color: Colors.red,
-                                    ),
-                                    onPressed: () {
-                                      context
-                                          .read<FavoritesCubit>()
-                                          .deleteCollection(collection.id);
-                                    },
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: AppColors.lightOrange,
+                                borderRadius: BorderRadius.circular(20),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black.withOpacity(0.05),
+                                    blurRadius: 12,
+                                    offset: const Offset(0, 4),
                                   ),
                                 ],
                               ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(14),
+                                child: Row(
+                                  children: [
+                                    Expanded(
+                                      child: Column(
+                                        crossAxisAlignment: .start,
+
+                                        children: [
+                                          const Icon(
+                                            LucideIcons.folderHeart,
+                                            color: AppColors.primaryOrange,
+                                            size: 30,
+                                          ),
+                                          const SizedBox(height: 10),
+                                          Text(
+                                            collection.name,
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis,
+                                            style: const TextStyle(
+                                              fontSize: 15,
+                                              fontWeight: FontWeight.w700,
+                                            ),
+                                          ),
+                                          const SizedBox(height: 2),
+                                          Text(
+                                            '${collection.quoteIds.length} quote(s)',
+                                            style: const TextStyle(
+                                              color: Color(0xFF6B7280),
+                                              fontSize: 12,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    IconButton(
+                                      icon: const Icon(
+                                        LucideIcons.trash2,
+                                        size: 30,
+                                        color: Colors.red,
+                                      ),
+                                      onPressed: () async {
+                                        final confirmed =
+                                            await showConfirmationDialog(
+                                              context: context,
+                                              title: 'Delete Collection',
+                                              content:
+                                                  'Are you sure you want to delete this collection?',
+                                              confirmText: 'Delete',
+                                              cancelText: 'Cancel',
+                                            );
+
+                                        if (confirmed) {
+                                          context
+                                              .read<FavoritesCubit>()
+                                              .deleteCollection(collection.id);
+                                        }
+                                      },
+                                    ),
+                                  ],
+                                ),
+                              ),
                             ),
-                          ),
-                        );
-                      },
-                    ),
-                ],
-              );
+                          );
+                        },
+                      ),
+                  ],
+                );
+              }
+              return SizedBox();
             },
           ),
         ),
