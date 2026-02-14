@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:graduation_project_nti/core/colors.dart';
 import 'package:graduation_project_nti/core/data/models/quote_model.dart';
+import 'package:share_plus/share_plus.dart';
 
 class QuoteCard extends StatelessWidget {
   final QuoteModel quote;
@@ -15,6 +16,19 @@ class QuoteCard extends StatelessWidget {
     required this.isFavorite,
     required this.onToggleFavorite,
   });
+  Future<void> handleShare(BuildContext context) async {
+    final quoteText = '"${quote.quote}"\n— ${quote.author}';
+
+    try {
+      await SharePlus.instance.share(ShareParams(text: quoteText));
+    } catch (_) {
+      if (!context.mounted) return;
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Unable to share this quote right now.')),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -61,7 +75,7 @@ class QuoteCard extends StatelessWidget {
                             begin: AppColors.grey,
                             end: isFavorite
                                 ? AppColors.primaryOrange
-                                :  AppColors.grey,
+                                : AppColors.grey,
                           ),
                           duration: const Duration(milliseconds: 500),
                           builder: (context, color, child) {
@@ -79,7 +93,7 @@ class QuoteCard extends StatelessWidget {
                             begin: AppColors.grey,
                             end: isFavorite
                                 ? AppColors.primaryOrange
-                                :  AppColors.grey,
+                                : AppColors.grey,
                           ),
                           duration: const Duration(milliseconds: 500),
                           builder: (context, color, child) {
@@ -97,7 +111,7 @@ class QuoteCard extends StatelessWidget {
                 Spacer(),
                 InkWell(
                   borderRadius: BorderRadius.circular(15),
-                  onTap: () {},
+                  onTap: () => handleShare(context),
                   child: Container(
                     padding: EdgeInsets.all(6),
                     decoration: BoxDecoration(
@@ -107,19 +121,11 @@ class QuoteCard extends StatelessWidget {
 
                     child: Row(
                       children: [
-                        Icon(
-                          Icons.share_outlined,
-                          color: AppColors.grey,
-                        ),
+                        Icon(Icons.share_outlined, color: AppColors.grey),
                         SizedBox(width: 2),
-                        Text(
-                          "Share",
-                          style: TextStyle(
-                            color: AppColors.grey,
-                          ),
-                        ),
+                        Text("Share", style: TextStyle(color: AppColors.grey)),
                       ],
-                    ),
+                    )
                   ),
                 ),
               ],

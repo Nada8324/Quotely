@@ -48,7 +48,7 @@ class QuotesRemoteDataSource {
       final queryParams = <String, dynamic>{
         if (category != null && category != 'All')
           'categories': category.toLowerCase(),
-        if (limit != null) 'limit': limit,
+        if (limit != null) 'limit': limit.toString(),
       };
 
       final response = await dio.get('quotes', queryParameters: queryParams);
