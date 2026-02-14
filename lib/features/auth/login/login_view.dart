@@ -44,15 +44,33 @@ class _LoginViewState extends State<LoginView> {
             keyboardType: TextInputType.emailAddress,
             decoration: const InputDecoration(
               labelText: 'Email',
+              labelStyle: TextStyle(color: AppColors.grey),
               hintText: 'Enter your account email',
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.all(Radius.circular(12)),
+                borderSide: BorderSide(color: AppColors.primaryOrange),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.all(Radius.circular(12)),
+                borderSide: BorderSide(color: Colors.grey),
+              ),
             ),
           ),
           actions: [
             TextButton(
               onPressed: () => Navigator.of(dialogContext).pop(),
-              child: const Text('Cancel'),
+              child: const Text(
+                'Cancel',
+                style: TextStyle(color: AppColors.grey),
+              ),
             ),
             ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.primaryOrange,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16),
+                ),
+              ),
               onPressed: () async {
                 final email = resetController.text.trim();
                 if (email.isEmpty) {
@@ -65,7 +83,7 @@ class _LoginViewState extends State<LoginView> {
                   Navigator.of(dialogContext).pop();
                 }
               },
-              child: const Text('Send'),
+              child: const Text('Send', style: TextStyle(color: Colors.white)),
             ),
           ],
         );

@@ -51,6 +51,8 @@ class HomeView extends StatelessWidget {
                     child: isLoading && quotes.isEmpty
                         ? buildLoadingShimmer()
                         : RefreshIndicator(
+                            backgroundColor: Colors.white,
+                            color: AppColors.primaryOrange,
                             onRefresh: () =>
                                 context.read<HomeCubit>().fetchQuotes(),
                             child: BlocBuilder<FavoritesCubit, FavoritesState>(
@@ -67,7 +69,6 @@ class HomeView extends StatelessWidget {
                                   itemCount: quotes.length,
                                   itemBuilder: (context, index) {
                                     final quote = quotes[index];
-                                    print(favoriteIds);
                                     return Padding(
                                       padding: const EdgeInsets.symmetric(
                                         horizontal: 16,

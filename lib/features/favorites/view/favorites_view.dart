@@ -14,10 +14,10 @@ class FavoritesView extends StatefulWidget {
   const FavoritesView({super.key});
 
   @override
-  State<FavoritesView> createState() => _CollectionsViewState();
+  State<FavoritesView> createState() => _FavoriteViewState();
 }
 
-class _CollectionsViewState extends State<FavoritesView> {
+class _FavoriteViewState extends State<FavoritesView> {
   Future<void> showCreateCollectionDialog(BuildContext context) async {
     final controller = TextEditingController();
 
@@ -247,7 +247,7 @@ class _CollectionsViewState extends State<FavoritesView> {
                                 );
                               },
                             ),
-                            const SizedBox(height: 8),
+                            const SizedBox(height: 5),
                             Align(
                               alignment: Alignment.centerRight,
                               child: inCollection
@@ -267,8 +267,14 @@ class _CollectionsViewState extends State<FavoritesView> {
                                       ),
                                       icon: const Icon(
                                         Icons.playlist_add_rounded,
+                                        color: AppColors.primaryOrange,
                                       ),
-                                      label: const Text('Add to collection'),
+                                      label: const Text(
+                                        'Add to collection',
+                                        style: TextStyle(
+                                          color: AppColors.primaryOrange,
+                                        ),
+                                      ),
                                     ),
                             ),
                             const SizedBox(height: 8),

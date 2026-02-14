@@ -8,33 +8,9 @@ class SearchCubit extends Cubit<SearchState> {
 
   final QuotesRemoteDataSource _remote = QuotesRemoteDataSource();
 
-  final List<String> _categories = const [
-    'All',
-    'Wisdom',
-    'Philosophy',
-    'Life',
-    'Truth',
-    'Inspirational',
-    'Relationships',
-    'Love',
-    'Faith',
-    'Humor',
-    'Success',
-    'Courage',
-    'Happiness',
-    'Art',
-    'Writing',
-    'Fear',
-    'Nature',
-    'Time',
-    'Freedom',
-    'Death',
-    'Leadership',
-  ];
-
   String _selectedCategory = 'All';
   String _keyword = '';
-  bool _showFilters = false;
+
   List<QuoteModel> _quotes = [];
 
   Future<void> loadInitialQuotes() async {
@@ -43,15 +19,7 @@ class SearchCubit extends Cubit<SearchState> {
   }
 
   Future<void> fetchQuotes(int limit) async {
-    emit(
-      SearchLoading(
-        selectedCategory: _selectedCategory,
-        categories: _categories,
-        keyword: _keyword,
-        showFilters: _showFilters,
-        quotes: _quotes,
-      ),
-    );
+    emit(SearchLoading());
 
     try {
       _quotes = await _remote.getQuotes(
@@ -61,9 +29,7 @@ class SearchCubit extends Cubit<SearchState> {
       emit(
         SearchSuccess(
           selectedCategory: _selectedCategory,
-          categories: _categories,
           keyword: _keyword,
-          showFilters: _showFilters,
           quotes: _quotes,
         ),
       );
@@ -71,11 +37,6 @@ class SearchCubit extends Cubit<SearchState> {
       emit(
         SearchFailure(
           message: 'Failed to load search results.',
-          selectedCategory: _selectedCategory,
-          categories: _categories,
-          keyword: _keyword,
-          showFilters: _showFilters,
-          quotes: _quotes,
         ),
       );
     }
@@ -88,9 +49,7 @@ class SearchCubit extends Cubit<SearchState> {
     emit(
       SearchSuccess(
         selectedCategory: _selectedCategory,
-        categories: _categories,
         keyword: _keyword,
-        showFilters: _showFilters,
         quotes: _quotes,
       ),
     );
@@ -102,9 +61,7 @@ class SearchCubit extends Cubit<SearchState> {
     emit(
       SearchSuccess(
         selectedCategory: _selectedCategory,
-        categories: _categories,
         keyword: _keyword,
-        showFilters: _showFilters,
         quotes: _quotes,
       ),
     );
@@ -115,22 +72,7 @@ class SearchCubit extends Cubit<SearchState> {
     emit(
       SearchSuccess(
         selectedCategory: _selectedCategory,
-        categories: _categories,
         keyword: _keyword,
-        showFilters: _showFilters,
-        quotes: _quotes,
-      ),
-    );
-  }
-
-  void toggleFilters() {
-    _showFilters = !_showFilters;
-    emit(
-      SearchSuccess(
-        selectedCategory: _selectedCategory,
-        categories: _categories,
-        keyword: _keyword,
-        showFilters: _showFilters,
         quotes: _quotes,
       ),
     );

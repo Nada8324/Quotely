@@ -18,8 +18,15 @@ class ProfileView extends StatelessWidget {
   }
 }
 
-class _ProfileBody extends StatelessWidget {
+class _ProfileBody extends StatefulWidget {
   const _ProfileBody();
+
+  @override
+  State<_ProfileBody> createState() => _ProfileBodyState();
+}
+
+class _ProfileBodyState extends State<_ProfileBody> {
+  bool _isEditing = false;
 
   @override
   Widget build(BuildContext context) {
@@ -27,198 +34,259 @@ class _ProfileBody extends StatelessWidget {
     final user = cubit.user;
 
     return Scaffold(
-      appBar: AppBar(
-        actionsPadding: EdgeInsets.all(10),
-        title: const Text('  Profile'),
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        actions: [
-          IconButton(
-            icon: const Icon(LucideIcons.logOut, color: Colors.red),
-            onPressed: () async {
-              final confirmed = await showConfirmationDialog(
-                context: context,
-                title: 'Logout',
-                content: 'Are you sure you want to logout?',
-                confirmText: 'Logout',
-                cancelText: 'Cancel',
-              );
-
-              if (confirmed) {
-                cubit.logout();
-              }
-            },
-          ),
-        ],
-      ),
-      extendBodyBehindAppBar: true,
-      body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [AppColors.lightOrange, Colors.white],
-          ),
-        ),
-        child: SafeArea(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.all(24),
-            child: Form(
-              key: cubit.formKey,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Center(
-                    child: CircleAvatar(
-                      radius: 48,
-                      backgroundColor: Colors.white,
-                      backgroundImage: (user?.photoURL?.isNotEmpty ?? false)
-                          ? NetworkImage(user!.photoURL!)
-                          : null,
-                      child: (user?.photoURL?.isEmpty ?? true)
-                          ? const Icon(Icons.person, size: 48)
-                          : null,
-                    ),
+      backgroundColor: const Color(0xFFF9FAFB),
+      body: SafeArea(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.fromLTRB(24, 8, 24, 24),
+          child: Form(
+            key: cubit.formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  'Profile',
+                  style: TextStyle(
+                    fontSize: 28,
+                    fontWeight: FontWeight.w600,
+                    color: Color(0xFF111827),
                   ),
-                  const SizedBox(height: 20),
-                  Container(
-                    width: double.infinity,
-                    padding: const EdgeInsets.all(20),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(20),
-                      boxShadow: const [
-                        BoxShadow(
-                          color: Color(0x14000000),
-                          blurRadius: 12,
-                          offset: Offset(0, 6),
-                        ),
-                      ],
-                    ),
-                    child: BlocConsumer<ProfileCubit, ProfileState>(
-                      listener: (context, state) {
-                        if (state is ProfileSaveSuccess) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text(state.message),
-                              backgroundColor: Colors.green,
-                            ),
-                          );
-                        }
+                ),
+                const SizedBox(height: 28),
+                Center(
+                  child: CircleAvatar(
+                    radius: 56,
+                    backgroundColor: AppColors.primaryOrange,
+                  
+                    child: const Icon(
+                            Icons.person,
+                            size: 56,
+                            color: Colors.white,
+                          )
+                     
+                  ),
+                ),
+                const SizedBox(height: 30),
+                Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.all(18),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(20),
+                    boxShadow: const [
+                      BoxShadow(
+                        color: Color(0x14000000),
+                        blurRadius: 12,
+                        offset: Offset(0, 6),
+                      ),
+                    ],
+                  ),
+                  child: BlocConsumer<ProfileCubit, ProfileState>(
+                    listener: (context, state) {
+                      if (state is ProfileSaveSuccess) {
+                        setState(() => _isEditing = false);
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(state.message),
+                            backgroundColor: Colors.green,
+                          ),
+                        );
+                      }
 
-                        if (state is ProfileSaveFailure) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text(state.message),
-                              backgroundColor: Colors.red,
+                      if (state is ProfileSaveFailure) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(state.message),
+                            backgroundColor: Colors.red,
+                          ),
+                        );
+                      }
+                    },
+                    builder: (context, state) {
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            'Name',
+                            style: TextStyle(
+                              fontSize: 13,
+                              color: Color(0xFF6B7280),
                             ),
-                          );
-                        }
-                      },
-                      builder: (context, state) {
-                        final isSaving = state is ProfileSaving;
-
-                        return Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const Text(
-                              'Email',
-                              style: TextStyle(
-                                fontSize: 13,
-                                color: Color(0xFF6B7280),
+                          ),
+                          const SizedBox(height: 8),
+                          Row(
+                            children: [
+                              const Icon(
+                                Icons.person_outline,
+                                color: Color(0xFF9CA3AF),
                               ),
-                            ),
-                            const SizedBox(height: 4),
-                            Text(
-                              user?.email ?? '-',
-                              style: const TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w500,
-                                color: Color(0xFF111827),
-                              ),
-                            ),
-                            const SizedBox(height: 24),
-                            const Text(
-                              'Display Name',
-                              style: TextStyle(
-                                fontSize: 13,
-                                color: Color(0xFF374151),
-                              ),
-                            ),
-                            const SizedBox(height: 8),
-                            TextFormField(
-                              controller: cubit.nameController,
-                              textInputAction: TextInputAction.done,
-                              validator: (value) {
-                                final name = value?.trim() ?? '';
-                                if (name.isEmpty) {
-                                  return 'Name is required';
-                                }
-                                if (name.length < 2) {
-                                  return 'Name must be at least 2 characters';
-                                }
-                                return null;
-                              },
-                              decoration: InputDecoration(
-                                hintText: 'Enter your name',
-                                filled: true,
-                                fillColor: const Color(0xFFF9FAFB),
-                                prefixIcon: const Icon(Icons.person_outline),
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(16),
-                                  borderSide: const BorderSide(
-                                    color: Color(0xFFE5E7EB),
-                                  ),
-                                ),
-                                enabledBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(16),
-                                  borderSide: const BorderSide(
-                                    color: Color(0xFFE5E7EB),
-                                  ),
-                                ),
-                                focusedBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(16),
-                                  borderSide: const BorderSide(
-                                    color: AppColors.primaryOrange,
-                                    width: 2,
-                                  ),
-                                ),
-                              ),
-                            ),
-                            const SizedBox(height: 18),
-                            SizedBox(
-                              width: double.infinity,
-                              height: 52,
-                              child: ElevatedButton(
-                                onPressed: isSaving ? null : cubit.saveName,
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: AppColors.primaryOrange,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(16),
-                                  ),
-                                ),
-                                child: isSaving
-                                    ? const SizedBox(
-                                        width: 22,
-                                        height: 22,
-                                        child: CircularProgressIndicator(
-                                          strokeWidth: 2.2,
-                                          color: Colors.white,
+                              const SizedBox(width: 12),
+                              Expanded(
+                                child: _isEditing
+                                    ? TextFormField(
+                                        controller: cubit.nameController,
+                                        textInputAction: TextInputAction.done,
+                                        validator: (value) {
+                                          final name = value?.trim() ?? '';
+                                          if (name.isEmpty) {
+                                            return 'Name is required';
+                                          }
+                                          if (name.length < 2) {
+                                            return 'Name must be at least 2 characters';
+                                          }
+                                          return null;
+                                        },
+                                        decoration: InputDecoration(
+                                          hintText: 'Enter your name',
+                                          isDense: true,
+                                          filled: true,
+                                          fillColor: const Color(0xFFF9FAFB),
+                                          border: OutlineInputBorder(
+                                            borderRadius: BorderRadius.circular(
+                                              12,
+                                            ),
+                                            borderSide: const BorderSide(
+                                              color: Color(0xFFE5E7EB),
+                                            ),
+                                          ),
+                                          enabledBorder: OutlineInputBorder(
+                                            borderRadius: BorderRadius.circular(
+                                              12,
+                                            ),
+                                            borderSide: const BorderSide(
+                                              color: Color(0xFFE5E7EB),
+                                            ),
+                                          ),
+                                          focusedBorder: OutlineInputBorder(
+                                            borderRadius: BorderRadius.circular(
+                                              12,
+                                            ),
+                                            borderSide: const BorderSide(
+                                              color: AppColors.primaryOrange,
+                                              width: 2,
+                                            ),
+                                          ),
                                         ),
                                       )
-                                    : const Text(
-                                        'Save Name',
-                                        style: TextStyle(color: Colors.white),
+                                    : Text(
+                                        cubit.nameController.text.trim().isEmpty
+                                            ? '-'
+                                            : cubit.nameController.text.trim(),
+                                        style: const TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w500,
+                                          color: Color(0xFF111827),
+                                        ),
                                       ),
                               ),
+                            ],
+                          ),
+                          const SizedBox(height: 24),
+                          const Text(
+                            'Email',
+                            style: TextStyle(
+                              fontSize: 13,
+                              color: Color(0xFF6B7280),
                             ),
-                          ],
-                        );
-                      },
+                          ),
+                          const SizedBox(height: 8),
+                          Row(
+                            children: [
+                              const Icon(
+                                Icons.mail_outline,
+                                color: Color(0xFF9CA3AF),
+                              ),
+                              const SizedBox(width: 12),
+                              Expanded(
+                                child: Text(
+                                  user?.email ?? '-',
+                                  style: const TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w500,
+                                    color: Color(0xFF111827),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      );
+                    },
+                  ),
+                ),
+                const SizedBox(height: 24),
+                SizedBox(
+                  width: double.infinity,
+                  height: 52,
+                  child: BlocBuilder<ProfileCubit, ProfileState>(
+                    builder: (context, state) {
+                      final isSaving = state is ProfileSaving;
+
+                      return ElevatedButton(
+                        onPressed: isSaving
+                            ? null
+                            : () {
+                                if (_isEditing) {
+                                  cubit.saveName();
+                                } else {
+                                  setState(() => _isEditing = true);
+                                }
+                              },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppColors.primaryOrange,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(14),
+                          ),
+                        ),
+                        child: isSaving
+                            ? const SizedBox(
+                                width: 22,
+                                height: 22,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2.2,
+                                  color: Colors.white,
+                                ),
+                              )
+                            : Text(
+                                _isEditing ? 'Save Changes' : 'Edit Profile',
+                                style: const TextStyle(color: Colors.white),
+                              ),
+                      );
+                    },
+                  ),
+                ),
+                const SizedBox(height: 14),
+                SizedBox(
+                  width: double.infinity,
+                  height: 52,
+                  child: OutlinedButton.icon(
+                    onPressed: () async {
+                      final confirmed = await showConfirmationDialog(
+                        context: context,
+                        title: 'Logout',
+                        content: 'Are you sure you want to logout?',
+                        confirmText: 'Logout',
+                        cancelText: 'Cancel',
+                      );
+
+                      if (confirmed) {
+                        cubit.logout();
+                      }
+                    },
+                    style: OutlinedButton.styleFrom(
+                      side: const BorderSide(color: Color(0xFFE5E7EB)),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(14),
+                      ),
+                      backgroundColor: Colors.white,
+                    ),
+                    icon: const Icon(LucideIcons.logOut, color: Colors.red),
+                    label: const Text(
+                      'Logout',
+                      style: TextStyle(color: Colors.red),
                     ),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
         ),

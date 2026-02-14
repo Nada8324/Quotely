@@ -39,7 +39,32 @@ class _SearchViewState extends State<SearchView> {
     }).toList();
   }
 
-  
+  bool showFilters = false;
+
+  final List<String> categories = const [
+    'All',
+    'Wisom',
+    'Philosophy',
+    'Life',
+    'Truth',
+    'Inspirational',
+    'Relationships',
+    'Love',
+    'Faith',
+    'Humor',
+    'Success',
+    'Courage',
+    'Happiness',
+    'Art',
+    'Writing',
+    'Fear',
+    'Nature',
+    'Time',
+    'Freedom',
+    'Death',
+    'Leadership',
+  ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -64,12 +89,16 @@ class _SearchViewState extends State<SearchView> {
               }
             },
             builder: (context, state) {
-              final keyword = _keywordFromState(state);
-              final selectedCategory = _selectedCategoryFromState(state);
-              final categories = _categoriesFromState(state);
-              final showFilters = _showFiltersFromState(state);
-              final quotes = _quotesFromState(state);
-              final filteredQuotes = _filteredQuotes(quotes, keyword);
+              final String keyword = state is SearchSuccess
+                  ? state.keyword
+                  : '';
+              final String selectedCategory = state is SearchSuccess
+                  ? state.selectedCategory
+                  : 'All';
+              final List<QuoteModel> quotes = state is SearchSuccess
+                  ? state.quotes
+                  : const [];
+              final filteredQuotes = _filteredQuotes(quotes, searchController.text);
               return Column(
                 children: [
                   Padding(
@@ -77,12 +106,14 @@ class _SearchViewState extends State<SearchView> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text(
-                          'Search Quotes',
-                          style: TextStyle(
-                            fontSize: 30,
-                            fontWeight: FontWeight.w600,
-                            color: Color(0xFF111827),
+                        Center(
+                          child: const Text(
+                            'Search Quotes',
+                            style: TextStyle(
+                              fontSize: 30,
+                              fontWeight: FontWeight.w600,
+                              color: Color(0xFF111827),
+                            ),
                           ),
                         ),
                         const SizedBox(height: 12),
@@ -91,9 +122,11 @@ class _SearchViewState extends State<SearchView> {
                             Expanded(
                               child: TextField(
                                 controller: searchController,
-                                onChanged: context
-                                    .read<SearchCubit>()
-                                    .updateKeyword,
+                                onChanged: (value) {
+                                  context.read<SearchCubit>().updateKeyword(
+                                    value,
+                                  );
+                                },
                                 decoration: InputDecoration(
                                   hintText: 'Search by quote or author...',
                                   prefixIcon: const Icon(Icons.search),
@@ -118,9 +151,11 @@ class _SearchViewState extends State<SearchView> {
                               ),
                             ),
                             IconButton(
-                              onPressed: context
-                                  .read<SearchCubit>()
-                                  .toggleFilters,
+                              onPressed: () {
+                                setState(() {
+                                  showFilters = !showFilters;
+                                });
+                              },
                               icon: Icon(
                                 LucideIcons.listFilter,
                                 color: showFilters
@@ -133,13 +168,25 @@ class _SearchViewState extends State<SearchView> {
                         if (showFilters) ...[
                           const SizedBox(height: 10),
                           DropdownButtonFormField<String>(
+                            dropdownColor: Colors.white,
                             value: selectedCategory,
                             decoration: InputDecoration(
                               labelText: 'Category',
+                              labelStyle: const TextStyle(
+                                color: AppColors.primaryOrange,
+                              ),
                               filled: true,
                               fillColor: Colors.white,
+                              hoverColor: AppColors.primaryOrange,
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(12),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(12),
+                                borderSide: const BorderSide(
+                                  color: AppColors.primaryOrange,
+                                  width: 2,
+                                ),
                               ),
                             ),
                             items: categories
@@ -177,6 +224,8 @@ class _SearchViewState extends State<SearchView> {
                                   : <String>{};
 
                               return RefreshIndicator(
+                                color: AppColors.primaryOrange,
+                                backgroundColor: Colors.white,
                                 onRefresh: () =>
                                     context.read<SearchCubit>().fetchQuotes(10),
                                 child: ListView.builder(
@@ -219,40 +268,5 @@ class _SearchViewState extends State<SearchView> {
         ),
       ),
     );
-  }
-
-  String _keywordFromState(SearchState state) {
-    if (state is SearchLoading) return state.keyword;
-    if (state is SearchSuccess) return state.keyword;
-    if (state is SearchFailure) return state.keyword;
-    return '';
-  }
-
-  String _selectedCategoryFromState(SearchState state) {
-    if (state is SearchLoading) return state.selectedCategory;
-    if (state is SearchSuccess) return state.selectedCategory;
-    if (state is SearchFailure) return state.selectedCategory;
-    return 'All';
-  }
-
-  List<String> _categoriesFromState(SearchState state) {
-    if (state is SearchLoading) return state.categories;
-    if (state is SearchSuccess) return state.categories;
-    if (state is SearchFailure) return state.categories;
-    return const ['All'];
-  }
-
-  bool _showFiltersFromState(SearchState state) {
-    if (state is SearchLoading) return state.showFilters;
-    if (state is SearchSuccess) return state.showFilters;
-    if (state is SearchFailure) return state.showFilters;
-    return false;
-  }
-
-  List<QuoteModel> _quotesFromState(SearchState state) {
-    if (state is SearchLoading) return state.quotes;
-    if (state is SearchSuccess) return state.quotes;
-    if (state is SearchFailure) return state.quotes;
-    return const [];
   }
 }

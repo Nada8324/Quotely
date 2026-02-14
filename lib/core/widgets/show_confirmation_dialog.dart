@@ -19,11 +19,17 @@ Future<bool> showConfirmationDialog({
         actions: [
           TextButton(
             onPressed: () => Navigator.of(dialogContext).pop(false),
-            child: Text(cancelText),
+            child: Text(cancelText, style: TextStyle(color: AppColors.grey)),
           ),
           ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppColors.primaryOrange,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16),
+              ),
+            ),
             onPressed: () => Navigator.of(dialogContext).pop(true),
-            child: Text(confirmText),
+            child: Text(confirmText, style: TextStyle(color: Colors.white)),
           ),
         ],
       );
