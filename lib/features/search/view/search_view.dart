@@ -43,7 +43,7 @@ class _SearchViewState extends State<SearchView> {
 
   final List<String> categories = const [
     'All',
-    'Wisom',
+    'Wisdom',
     'Philosophy',
     'Life',
     'Truth',
@@ -98,7 +98,10 @@ class _SearchViewState extends State<SearchView> {
               final List<QuoteModel> quotes = state is SearchSuccess
                   ? state.quotes
                   : const [];
-              final filteredQuotes = _filteredQuotes(quotes, searchController.text);
+              final filteredQuotes = _filteredQuotes(
+                quotes,
+                searchController.text,
+              );
               return Column(
                 children: [
                   Padding(

@@ -61,4 +61,18 @@ class QuotesRemoteDataSource {
     }
     return quotes;
   }
+
+  /// Get quote of the day
+  Future<QuoteModel?> getQuoteOfTheDay() async {
+    try {
+      final response = await dio.get('quoteoftheday');
+      final data = response.data;
+
+      return QuoteModel.fromJson(data[0]);
+    } catch (e) {
+      print('Error fetching quote of the day: $e');
+    }
+
+    return null;
+  }
 }

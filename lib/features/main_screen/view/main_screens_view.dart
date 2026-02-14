@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:graduation_project_nti/features/daily_quote/cubit/cubit.dart';
 import 'package:graduation_project_nti/features/daily_quote/view/daily_quote_widget.dart';
 import 'package:graduation_project_nti/features/favorites/cubit/cubit.dart';
 import 'package:graduation_project_nti/features/favorites/view/favorites_view.dart';
@@ -39,9 +40,13 @@ class _MainScreenState extends State<MainScreen> {
           create: (context) => FavoritesCubit()..startWatching(),
           child: FavoritesView(),
         ),
-         BlocProvider(
+        BlocProvider(
           create: (context) => SearchCubit()..loadInitialQuotes(),
           child: SearchView(),
+        ),
+        BlocProvider(
+          create: (context) => DailyQuoteCubit()..loadQuoteOfTheDay(),
+          child: DailyView(),
         ),
         BlocProvider(create: (context) => ProfileCubit(), child: ProfileView()),
       ],
