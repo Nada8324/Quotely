@@ -183,7 +183,13 @@ class _LoginViewState extends State<LoginView> {
                             onPressed: isLoading
                                 ? null
                                 : () => _openResetDialog(context),
-                            child: const Text('Forgot Password?'),
+                            child: const Text(
+                              'Forgot Password?',
+                              style: TextStyle(
+                                color: AppColors.primaryOrange,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
                           ),
                         ),
                         const SizedBox(height: 10),

@@ -75,7 +75,7 @@ class _SignupViewState extends State<SignupView> {
                       children: [
                         const SizedBox(height: 40),
                         const Text(
-                          "QuoteVault",
+                          "Quotely",
                           style: TextStyle(
                             fontSize: 36,
                             fontWeight: FontWeight.w700,
@@ -84,7 +84,7 @@ class _SignupViewState extends State<SignupView> {
                         ),
                         const SizedBox(height: 8),
                         const Text(
-                          "Your Daily Dose of Inspiration",
+                          "Create Your Account",
                           style: TextStyle(
                             fontSize: 14,
                             color: Color(0xFF6B7280),

@@ -45,7 +45,7 @@ class _ProfileBody extends StatelessWidget {
               );
 
               if (confirmed) {
-                cubit.logout;
+                cubit.logout();
               }
             },
           ),
