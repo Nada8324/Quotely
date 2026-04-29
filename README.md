@@ -9,7 +9,7 @@
 ### 🔐 Authentication & Onboarding
 | Login | Signup | Reset Password |
 | :---: | :---: | :---: |
-| ![Login](ScreenShots\login-portrait.png) | ![Signup]("ScreenShots\signup-portrait.png") | ![Reset Password](ScreenShots\reset_password_portrait.png) |
+| ![Login](ScreenShots/login-portrait.png) | ![Signup]("ScreenShots\signup-portrait.png") | ![Reset Password](ScreenShots\reset_password_portrait.png) |
 
 ### 🏠 Core Experience
 | Home Feed | Search & Filter | Share Quote |
