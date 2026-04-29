@@ -1,6 +1,6 @@
 # 📱 Quotely
 
-**Quotely** is a modern, high-performance Flutter application designed for discovering, saving, and organizing inspirational quotes. The app features real-time synchronization with Firebase and a dedicated Android Home-screen Widget.
+**Quotely** is a modern Flutter application for discovering, saving, and organizing inspirational quotes with a smooth and engaging user experience.
 
 ---
 
@@ -9,31 +9,31 @@
 ### 🔐 Authentication & Onboarding
 | Login | Signup | Reset Password |
 | :---: | :---: | :---: |
-| ![Login](ScreenShots/login-portrait.png) | ![Signup]("ScreenShots\signup-portrait.png") | ![Reset Password](ScreenShots\reset_password_portrait.png) |
+| ![Login](ScreenShots/login-portrait.png) | ![Signup]("ScreenShots/signup-portrait.png") | ![Reset Password](ScreenShots/reset_password_portrait.png) |
 
 ### 🏠 Core Experience
 | Home Feed | Search & Filter | Share Quote |
 | :---: | :---: | :---: |
-| ![Home](ScreenShots\home-portrait.png) | ![Search](ScreenShots\search_and_filter_portrait.png) | ![Share](ScreenShots\share-portrait.png) |
+| ![Home](ScreenShots/home-portrait.png) | ![Search](ScreenShots/search_and_filter_portrait.png) | ![Share](ScreenShots/share-portrait.png) |
 
 ### 📂 Favorites & Collections
 | Favorite | Add to Collection | My Collections |
 | :---: | :---: | :---: |
-| ![Favorite](ScreenShots\favorites-portrait.png) | ![Add to Collection](ScreenShots\add-to-collection-portrait.png) | ![Collections](ScreenShots\collection-portrait.png) |
+| ![Favorite](ScreenShots/favorites-portrait.png) | ![Add to Collection](ScreenShots/add-to-collection-portrait.png) | ![Collections](ScreenShots/collection-portrait.png) |
 
 ### 📅 Daily Inspiration & Profile
 | Daily Quote | Android Home Widget | Profile |
 | :---: | :---: | :---: |
-| ![Daily](ScreenShots\daily-quote-portrait.png) | ![Widget](ScreenShots\daily-home-widget-portrait.png) | ![Profile](ScreenShots\profile-portrait.png) |
+| ![Daily](ScreenShots/daily-quote-portrait.png) | ![Widget](ScreenShots/daily-home-widget-portrait.png) | ![Profile](ScreenShots/profile-portrait.png) |
 
 ---
 
 ## ✨ Key Features
 
-* [cite_start]**🔒 Secure Authentication**: Full authentication flow using Firebase Auth (Login, Signup, Password Reset)[cite: 113].
-* [cite_start]**🔍 Smart Discovery**: Explore quotes by category or search by author/text with real-time filtering[cite: 111, 112].
-* [cite_start]**📂 Organized Collections**: Create custom collections and manage favorite quotes in folders synced with Cloud Firestore[cite: 113].
-* [cite_start]**📅 Daily Inspiration**: Dedicated screen for the "Quote of the Day" with local caching for offline access[cite: 108].
+**🔒 Secure Authentication**: Full authentication flow using Firebase Auth (Login, Signup, Password Reset)[cite: 113].
+* **🔍 Smart Discovery**: Explore quotes by category or search by author/text with real-time filtering[cite: 111, 112].
+* **📂 Organized Collections**: Create custom collections and manage favorite quotes in folders synced with Cloud Firestore[cite: 113].
+* **📅 Daily Inspiration**: Dedicated screen for the "Quote of the Day" with local caching for offline access[cite: 108].
 * **🖼 Android Home Widget**: Stay inspired with a native Android widget that syncs with the app via Method Channels.
 * **📤 Easy Sharing**: Share your favorite quotes directly through the system's native share sheet.
 
