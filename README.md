@@ -9,7 +9,7 @@
 ### 🔐 Authentication & Onboarding
 | Login | Signup | Reset Password |
 | :---: | :---: | :---: |
-| ![Login](ScreenShots/login-portrait.png) | ![Signup]("ScreenShots/signup-portrait.png") | ![Reset Password](ScreenShots/reset_password_portrait.png) |
+| ![Login](ScreenShots/login-portrait.png) | ![Signup](ScreenShots/signup-portrait.png) | ![Reset Password](ScreenShots/reset_password_portrait.png) |
 
 ### 🏠 Core Experience
 | Home Feed | Search & Filter | Share Quote |
@@ -44,11 +44,11 @@
 The project follows **Feature-first Clean Architecture** principles to ensure the code is scalable, testable, and maintainable.
 
 ### Technical Stack:
-* [cite_start]**Framework**: [Flutter](https://flutter.dev) (Dart)[cite: 103].
-* [cite_start]**State Management**: [Flutter BLoC / Cubit](https://pub.dev/packages/flutter_bloc) for predictable state transitions[cite: 106].
-* [cite_start]**Backend**: Firebase (Auth, Firestore, FCM)[cite: 113].
-* [cite_start]**Networking**: [Dio](https://pub.dev/packages/dio) for REST API consumption (API Ninjas)[cite: 111].
-* [cite_start]**Local Storage**: [SharedPreferences](https://pub.dev/packages/shared_preferences) for caching and [SQLite](https://pub.dev/packages/sqflite) for structured data[cite: 108].
+* **Framework**: [Flutter](https://flutter.dev) (Dart)[cite: 103].
+* **State Management**: [Flutter BLoC / Cubit](https://pub.dev/packages/flutter_bloc) for predictable state transitions[cite: 106].
+* **Backend**: Firebase (Auth, Firestore, FCM)[cite: 113].
+* **Networking**: [Dio](https://pub.dev/packages/dio) for REST API consumption (API Ninjas)[cite: 111].
+* **Local Storage**: [SharedPreferences](https://pub.dev/packages/shared_preferences) for caching and [SQLite](https://pub.dev/packages/sqflite) for structured data[cite: 108].
 * **Communication**: Method Channels for Flutter-to-Native (Android Widget) communication.
 
 ### Folder Structure:
