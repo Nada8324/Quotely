@@ -1,134 +1,96 @@
-# Quotely (graduation_project_nti)
+# 📱 Quotely
 
-Quotely is a Flutter app for discovering inspirational quotes, saving favorites, organizing them into collections, and viewing a daily quote with Android home-screen widget support.
+**Quotely** is a modern, high-performance Flutter application designed for discovering, saving, and organizing inspirational quotes. The app features real-time synchronization with Firebase and a dedicated Android Home-screen Widget.
 
-## Overview
+---
 
-This project uses:
-- `Flutter` for UI
-- `flutter_bloc` for state management
-- `Firebase Auth` for authentication
-- `Cloud Firestore` for user profiles, favorites, and collections
-- `Dio` + API Ninjas Quotes API for quotes data
-- `SharedPreferences` for daily quote caching and widget sync
+## 📸 App Preview
 
-## Main Features
+### 🔐 Authentication & Onboarding
+| Login | Signup | Reset Password |
+| :---: | :---: | :---: |
+| ![Login](ScreenShots\login-portrait.png) | ![Signup]("ScreenShots\signup-portrait.png") | ![Reset Password](ScreenShots\reset_password_portrait.png) |
 
-- Email/password authentication (login, signup, password reset)
-- Home feed with categories and refresh
-- Search by quote text or author + category filter
-- Favorite/unfavorite quotes
-- Create/delete collections and add/remove quotes from collections
-- Daily quote screen with local cache fallback
-- Share quotes via system share sheet
-- Android home widget for daily quote
+### 🏠 Core Experience
+| Home Feed | Search & Filter | Share Quote |
+| :---: | :---: | :---: |
+| ![Home](ScreenShots\home-portrait.png) | ![Search](ScreenShots\search_and_filter_portrait.png) | ![Share](ScreenShots\share-portrait.png) |
 
-## Architecture Summary
+### 📂 Favorites & Collections
+| Favorite | Add to Collection | My Collections |
+| :---: | :---: | :---: |
+| ![Favorite](ScreenShots\favorites-portrait.png) | ![Add to Collection](ScreenShots\add-to-collection-portrait.png) | ![Collections](ScreenShots\collection-portrait.png) |
 
-The app follows a feature-first structure with Cubit per feature:
+### 📅 Daily Inspiration & Profile
+| Daily Quote | Android Home Widget | Profile |
+| :---: | :---: | :---: |
+| ![Daily](ScreenShots\daily-quote-portrait.png) | ![Widget](ScreenShots\daily-home-widget-portrait.png) | ![Profile](ScreenShots\profile-portrait.png) |
 
-- `lib/features/auth`: login/signup/auth gate
-- `lib/features/home`: home quotes and categories
-- `lib/features/search`: search/filter flow
-- `lib/features/favorites`: favorites + collections
-- `lib/features/daily_quote`: quote of the day logic + caching
-- `lib/features/profile`: profile editing + logout
-- `lib/core/data`: data sources and models
-- `lib/core/widgets`: reusable UI widgets
+---
 
-Data flow pattern (typical):
-1. `View` dispatches action to `Cubit`
-2. `Cubit` calls data source
-3. Data source calls remote API / Firebase
-4. `Cubit` emits states (`Loading`, `Success`, `Failure`)
-5. `View` rebuilds based on state
+## ✨ Key Features
 
-## Project Structure
+* [cite_start]**🔒 Secure Authentication**: Full authentication flow using Firebase Auth (Login, Signup, Password Reset)[cite: 113].
+* [cite_start]**🔍 Smart Discovery**: Explore quotes by category or search by author/text with real-time filtering[cite: 111, 112].
+* [cite_start]**📂 Organized Collections**: Create custom collections and manage favorite quotes in folders synced with Cloud Firestore[cite: 113].
+* [cite_start]**📅 Daily Inspiration**: Dedicated screen for the "Quote of the Day" with local caching for offline access[cite: 108].
+* **🖼 Android Home Widget**: Stay inspired with a native Android widget that syncs with the app via Method Channels.
+* **📤 Easy Sharing**: Share your favorite quotes directly through the system's native share sheet.
 
+---
+
+## 🏗 Architecture & Tech Stack
+
+The project follows **Feature-first Clean Architecture** principles to ensure the code is scalable, testable, and maintainable.
+
+### Technical Stack:
+* [cite_start]**Framework**: [Flutter](https://flutter.dev) (Dart)[cite: 103].
+* [cite_start]**State Management**: [Flutter BLoC / Cubit](https://pub.dev/packages/flutter_bloc) for predictable state transitions[cite: 106].
+* [cite_start]**Backend**: Firebase (Auth, Firestore, FCM)[cite: 113].
+* [cite_start]**Networking**: [Dio](https://pub.dev/packages/dio) for REST API consumption (API Ninjas)[cite: 111].
+* [cite_start]**Local Storage**: [SharedPreferences](https://pub.dev/packages/shared_preferences) for caching and [SQLite](https://pub.dev/packages/sqflite) for structured data[cite: 108].
+* **Communication**: Method Channels for Flutter-to-Native (Android Widget) communication.
+
+### Folder Structure:
 ```text
 lib/
-  core/
-    data/
-      datasources/
-      models/
-    services/
-    widgets/
-  features/
-    auth/
-    daily_quote/
-    favorites/
-    home/
-    main_screen/
-    profile/
-    search/
-  firebase_options.dart
-  main.dart
+ ├── core/          # Reusable widgets, themes, and data sources
+ └── features/      # Feature-based folders (auth, home, search, etc.)
+      ├── data/     # Models & Repositories
+      ├── logic/    # Cubits/State Management
+      └── presentation/ # UI Screens & Widgets
 ```
+## ⚙️ Setup & Installation
 
-## Prerequisites
+1.  **Clone the repository**:
+    ```bash
+    git clone [https://github.com/Nada8324/Quotely.git](https://github.com/Nada8324/Quotely.git)
+    ```
+2.  **Install dependencies**:
+    ```bash
+    flutter pub get
+    ```
+3.  **Environment Variables**:
+    * Create a `.env` file in the root directory.
+    * Add your API key: `QUOTES_API_KEY=YOUR_KEY_HERE`.
+4.  **Firebase Setup**:
+    * Add your `google-services.json` to `android/app/`.
+    * Run `flutterfire configure` if you are using a new project.
+5.  **Run the app**:
+    ```bash
+    flutter run
+    ```
 
-- Flutter SDK (matching Dart `^3.10.7`)
-- Android Studio or VS Code with Flutter tooling
-- Firebase project configured for this app
+---
 
-## Environment Variables
+## 🛠 Future Enhancements
+- [ ] Add Repository pattern for better abstraction.
+- [ ] Implement Unit & Widget testing for core features.
+- [ ] Add CI/CD pipeline using GitHub Actions.
 
-Create a `.env` file in the project root:
+---
 
-```env
-QUOTES_API_KEY=YOUR_API_NINJAS_KEY
-```
+## 📄 License
+This project is part of my graduation work at **NTI (National Telecommunication Institute)**.
 
-The app reads this key in `QuotesRemoteDataSource` using `flutter_dotenv`.
-
-## Firebase Setup
-
-This repo already contains Firebase integration files (`firebase_options.dart`, `android/app/google-services.json`).
-
-If you connect to a different Firebase project:
-1. Reconfigure with FlutterFire CLI.
-2. Regenerate `lib/firebase_options.dart`.
-3. Replace platform Firebase config files.
-
-Expected Firestore paths:
-- `profiles/{uid}`
-- `profiles/{uid}/favorites/{quoteId}`
-- `profiles/{uid}/collections/{collectionId}`
-
-## Run the App
-
-```bash
-flutter pub get
-flutter run
-```
-
-## Android Daily Quote Widget
-
-Widget integration is implemented in:
-- `android/app/src/main/kotlin/.../MainActivity.kt`
-- `android/app/src/main/kotlin/.../DailyQuoteWidgetProvider.kt`
-- `android/app/src/main/res/layout/daily_quote_widget.xml`
-
-The widget content is synced from Flutter through a `MethodChannel` named:
-- `daily_quote_widget`
-
-## Known Notes
-
-- `.env` is currently tracked in the repository and contains a real API key. This should be treated as exposed.
-- Recommended immediate actions:
-  1. Rotate/revoke the current API key.
-  2. Remove `.env` from version control.
-  3. Add `.env` to `.gitignore`.
-  4. Use a safe `.env.example` template instead.
-
-## Suggested Next Improvements
-
-- Add repository layer/interfaces between Cubits and data sources
-- Add unit tests for Cubits and data sources
-- Add widget tests for critical views
-- Improve error typing and centralized failure handling
-- Add CI checks (`flutter analyze`, `flutter test`)
-
-## License
-
-Private graduation project.
+**Developed by [Nada Mohsen](https://github.com/Nada8324)** 🚀
