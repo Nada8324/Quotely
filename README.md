@@ -30,10 +30,10 @@
 
 ## ✨ Key Features
 
-**🔒 Secure Authentication**: Full authentication flow using Firebase Auth (Login, Signup, Password Reset)[cite: 113].
-* **🔍 Smart Discovery**: Explore quotes by category or search by author/text with real-time filtering[cite: 111, 112].
-* **📂 Organized Collections**: Create custom collections and manage favorite quotes in folders synced with Cloud Firestore[cite: 113].
-* **📅 Daily Inspiration**: Dedicated screen for the "Quote of the Day" with local caching for offline access[cite: 108].
+* **🔒 Secure Authentication**: Full authentication flow using Firebase Auth (Login, Signup, Password Reset).
+* **🔍 Smart Discovery**: Explore quotes by category or search by author/text with real-time filtering.
+* **📂 Organized Collections**: Create custom collections and manage favorite quotes in folders synced with Cloud Firestore.
+* **📅 Daily Inspiration**: Dedicated screen for the "Quote of the Day" with local caching for offline access.
 * **🖼 Android Home Widget**: Stay inspired with a native Android widget that syncs with the app via Method Channels.
 * **📤 Easy Sharing**: Share your favorite quotes directly through the system's native share sheet.
 
@@ -44,11 +44,11 @@
 The project follows **Feature-first Clean Architecture** principles to ensure the code is scalable, testable, and maintainable.
 
 ### Technical Stack:
-* **Framework**: [Flutter](https://flutter.dev) (Dart)[cite: 103].
-* **State Management**: [Flutter BLoC / Cubit](https://pub.dev/packages/flutter_bloc) for predictable state transitions[cite: 106].
-* **Backend**: Firebase (Auth, Firestore, FCM)[cite: 113].
-* **Networking**: [Dio](https://pub.dev/packages/dio) for REST API consumption (API Ninjas)[cite: 111].
-* **Local Storage**: [SharedPreferences](https://pub.dev/packages/shared_preferences) for caching and [SQLite](https://pub.dev/packages/sqflite) for structured data[cite: 108].
+* **Framework**: [Flutter](https://flutter.dev) (Dart).
+* **State Management**: [Flutter BLoC / Cubit](https://pub.dev/packages/flutter_bloc) for predictable state transitions.
+* **Backend**: Firebase (Auth, Firestore, FCM).
+* **Networking**: [Dio](https://pub.dev/packages/dio) for REST API consumption (API Ninjas).
+* **Local Storage**: [SharedPreferences](https://pub.dev/packages/shared_preferences) for caching and [SQLite](https://pub.dev/packages/sqflite) for structured data.
 * **Communication**: Method Channels for Flutter-to-Native (Android Widget) communication.
 
 ### Folder Structure:
@@ -84,7 +84,6 @@ lib/
 ---
 
 ## 🛠 Future Enhancements
-- [ ] Add Repository pattern for better abstraction.
 - [ ] Implement Unit & Widget testing for core features.
 - [ ] Add CI/CD pipeline using GitHub Actions.
 
