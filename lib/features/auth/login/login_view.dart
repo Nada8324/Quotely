@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:graduation_project_nti/core/colors.dart';
 import 'package:graduation_project_nti/core/widgets/input_field.dart';
 import 'package:graduation_project_nti/features/auth/login/cubit/cubit.dart';
@@ -42,16 +43,16 @@ class _LoginViewState extends State<LoginView> {
           content: TextField(
             controller: resetController,
             keyboardType: TextInputType.emailAddress,
-            decoration: const InputDecoration(
+            decoration:  InputDecoration(
               labelText: 'Email',
               labelStyle: TextStyle(color: AppColors.grey),
               hintText: 'Enter your account email',
               focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.all(Radius.circular(12)),
+                borderRadius: BorderRadius.all(Radius.circular(12.r)),
                 borderSide: BorderSide(color: AppColors.primaryOrange),
               ),
               enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.all(Radius.circular(12)),
+                borderRadius: BorderRadius.all(Radius.circular(12.r)),
                 borderSide: BorderSide(color: Colors.grey),
               ),
             ),
@@ -68,7 +69,7 @@ class _LoginViewState extends State<LoginView> {
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.primaryOrange,
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(16),
+                  borderRadius: BorderRadius.circular(16.r),
                 ),
               ),
               onPressed: () async {
@@ -108,7 +109,7 @@ class _LoginViewState extends State<LoginView> {
         child: SafeArea(
           child: Center(
             child: SingleChildScrollView(
-              padding: const EdgeInsets.symmetric(horizontal: 24),
+              padding: EdgeInsets.symmetric(horizontal: 24.w),
               child: BlocConsumer<LoginCubit, LoginState>(
                 listener: (context, state) {
                   if (state is LoginFailure) {
@@ -144,25 +145,25 @@ class _LoginViewState extends State<LoginView> {
                     key: _formKey,
                     child: Column(
                       children: [
-                        const SizedBox(height: 24),
-                        const Text(
+                         SizedBox(height: 24.h),
+                         Text(
                           "Quotely",
                           style: TextStyle(
-                            fontSize: 36,
+                            fontSize: 36.sp,
                             fontWeight: FontWeight.w600,
                             color: Color(0xFF111827),
                           ),
                         ),
-                        const SizedBox(height: 8),
-                        const Text(
+                         SizedBox(height: 8.h),
+                         Text(
                           "Your Daily Dose of Inspiration",
                           style: TextStyle(
-                            fontSize: 14,
+                            fontSize: 14.sp,
                             color: Color(0xFF6B7280),
                           ),
                         ),
 
-                        const SizedBox(height: 40),
+                         SizedBox(height: 40.h),
                         InputField(
                           label: 'Email',
                           hint: 'Enter your email',
@@ -178,7 +179,7 @@ class _LoginViewState extends State<LoginView> {
                             return null;
                           },
                         ),
-                        const SizedBox(height: 20),
+                         SizedBox(height: 20.h),
                         InputField(
                           label: 'Password',
                           hint: 'Enter your password',
@@ -210,10 +211,10 @@ class _LoginViewState extends State<LoginView> {
                             ),
                           ),
                         ),
-                        const SizedBox(height: 10),
+                         SizedBox(height: 10.h),
                         SizedBox(
                           width: double.infinity,
-                          height: 56,
+                          height: 56.h,
                           child: ElevatedButton(
                             onPressed: isLoading
                                 ? null
@@ -230,7 +231,7 @@ class _LoginViewState extends State<LoginView> {
                             style: ElevatedButton.styleFrom(
                               backgroundColor: AppColors.primaryOrange,
                               shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(16),
+                                borderRadius: BorderRadius.circular(16.r),
                               ),
                             ),
                             child: isLoading
@@ -243,7 +244,7 @@ class _LoginViewState extends State<LoginView> {
                                   ),
                           ),
                         ),
-                        const SizedBox(height: 24),
+                        SizedBox(height: 24.h),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
@@ -274,7 +275,7 @@ class _LoginViewState extends State<LoginView> {
                             ),
                           ],
                         ),
-                        const SizedBox(height: 30),
+                        SizedBox(height: 30.h),
                       ],
                     ),
                   );

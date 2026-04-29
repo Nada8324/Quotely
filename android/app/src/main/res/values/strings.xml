@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="daily_quote_widget_label">Daily Quote</string>
+    <string name="daily_quote_widget_description">Shows the quote of the day on your home screen.</string>
+</resources>

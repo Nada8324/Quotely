@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:graduation_project_nti/core/colors.dart';
 
 import 'package:lucide_icons/lucide_icons.dart';
@@ -46,13 +47,13 @@ class BottomNav extends StatelessWidget {
                   color: isActive
                       ? AppColors.primaryOrange
                       : const Color.fromARGB(225, 158, 158, 158),
-                  size: 22,
+                  size: 22.r,
                 ),
-                const SizedBox(height: 2),
+                 SizedBox(height: 2.h),
                 Text(
                   item['label'] as String,
                   style: TextStyle(
-                    fontSize: 12,
+                    fontSize: 12.sp,
                     color: isActive ? AppColors.primaryOrange : Colors.grey,
                     fontWeight: isActive ? FontWeight.bold : FontWeight.normal,
                   ),

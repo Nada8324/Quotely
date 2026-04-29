@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:graduation_project_nti/core/colors.dart';
 import 'package:graduation_project_nti/core/data/models/quote_model.dart';
 import 'package:share_plus/share_plus.dart';
@@ -34,7 +35,7 @@ class QuoteCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       elevation: 2,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.r)),
       color: Colors.white,
       child: Padding(
         padding: const EdgeInsets.all(16),
@@ -43,9 +44,12 @@ class QuoteCard extends StatelessWidget {
           children: [
             Text(
               '“${quote.quote}”',
-              style: TextStyle(fontSize: fontSize, fontWeight: FontWeight.w500),
+              style: TextStyle(
+                fontSize: fontSize.sp,
+                fontWeight: FontWeight.w500,
+              ),
             ),
-            const SizedBox(height: 8),
+            SizedBox(height: 8.h),
             Text(
               '- ${quote.author}',
               style: TextStyle(color: Colors.grey[600]),
@@ -53,20 +57,20 @@ class QuoteCard extends StatelessWidget {
             Divider(
               color: const Color.fromARGB(48, 158, 158, 158),
               thickness: 1,
-              indent: 20,
-              endIndent: 20,
+              indent: 20.w,
+              endIndent: 20.w,
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 InkWell(
                   onTap: () => onToggleFavorite(quote.id),
-                  borderRadius: BorderRadius.circular(15),
+                  borderRadius: BorderRadius.circular(15.r),
                   child: Container(
                     padding: const EdgeInsets.all(6),
                     decoration: BoxDecoration(
                       color: const Color.fromARGB(29, 191, 190, 190),
-                      borderRadius: BorderRadius.circular(15),
+                      borderRadius: BorderRadius.circular(15.r),
                     ),
                     child: Row(
                       children: [
@@ -87,7 +91,7 @@ class QuoteCard extends StatelessWidget {
                             );
                           },
                         ),
-                        const SizedBox(width: 2),
+                        SizedBox(width: 2.w),
                         TweenAnimationBuilder<Color?>(
                           tween: ColorTween(
                             begin: AppColors.grey,
@@ -116,16 +120,16 @@ class QuoteCard extends StatelessWidget {
                     padding: EdgeInsets.all(6),
                     decoration: BoxDecoration(
                       color: const Color.fromARGB(29, 191, 190, 190),
-                      borderRadius: BorderRadius.circular(15),
+                      borderRadius: BorderRadius.circular(15.r),
                     ),
 
                     child: Row(
                       children: [
                         Icon(Icons.share_outlined, color: AppColors.grey),
-                        SizedBox(width: 2),
+                        SizedBox(width: 2.w),
                         Text("Share", style: TextStyle(color: AppColors.grey)),
                       ],
-                    )
+                    ),
                   ),
                 ),
               ],

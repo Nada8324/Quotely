@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:graduation_project_nti/core/colors.dart';
 import 'package:graduation_project_nti/core/widgets/input_field.dart';
 import 'package:graduation_project_nti/features/auth/signup/cubit/cubit.dart';
@@ -73,24 +74,24 @@ class _SignupViewState extends State<SignupView> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        const SizedBox(height: 40),
-                        const Text(
+                         SizedBox(height: 40.h),
+                         Text(
                           "Quotely",
                           style: TextStyle(
-                            fontSize: 36,
+                            fontSize: 36.sp,
                             fontWeight: FontWeight.w700,
                             color: Color(0xFF111827),
                           ),
                         ),
-                        const SizedBox(height: 8),
-                        const Text(
+                         SizedBox(height: 8.h),
+                         Text(
                           "Create Your Account",
                           style: TextStyle(
-                            fontSize: 14,
+                            fontSize: 14.sp,
                             color: Color(0xFF6B7280),
                           ),
                         ),
-                        const SizedBox(height: 40),
+                        SizedBox(height: 40.h),
 
                         InputField(
                           label: "Name",
@@ -104,7 +105,7 @@ class _SignupViewState extends State<SignupView> {
                             return null;
                           },
                         ),
-                        const SizedBox(height: 20),
+                         SizedBox(height: 20.h),
 
                         InputField(
                           label: "Email",
@@ -121,7 +122,7 @@ class _SignupViewState extends State<SignupView> {
                             return null;
                           },
                         ),
-                        const SizedBox(height: 20),
+                         SizedBox(height: 20.h),
 
                         InputField(
                           label: "Password",
@@ -139,11 +140,11 @@ class _SignupViewState extends State<SignupView> {
                             return null;
                           },
                         ),
-                        const SizedBox(height: 32),
+                         SizedBox(height: 32.h),
 
                         SizedBox(
                           width: double.infinity,
-                          height: 56,
+                          height: 56.h,
                           child: ElevatedButton(
                             onPressed: isLoading
                                 ? null
@@ -171,17 +172,17 @@ class _SignupViewState extends State<SignupView> {
                                 ? const CircularProgressIndicator(
                                     color: Colors.white,
                                   )
-                                : const Text(
+                                : Text(
                                     "Create Account",
                                     style: TextStyle(
-                                      fontSize: 16,
+                                      fontSize: 16.sp,
                                       fontWeight: FontWeight.w600,
                                       color: Colors.white,
                                     ),
                                   ),
                           ),
                         ),
-                        const SizedBox(height: 24),
+                        SizedBox(height: 24.h),
 
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -202,7 +203,7 @@ class _SignupViewState extends State<SignupView> {
                             ),
                           ],
                         ),
-                        const SizedBox(height: 40),
+                        SizedBox(height: 40.h),
                       ],
                     ),
                   );

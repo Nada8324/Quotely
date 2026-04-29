@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:graduation_project_nti/core/colors.dart';
 
 Future<bool> showConfirmationDialog({
@@ -13,7 +14,7 @@ Future<bool> showConfirmationDialog({
     builder: (dialogContext) {
       return AlertDialog(
         backgroundColor: AppColors.lightOrange,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.r)),
         title: Text(title),
         content: Text(content),
         actions: [
@@ -25,7 +26,7 @@ Future<bool> showConfirmationDialog({
             style: ElevatedButton.styleFrom(
               backgroundColor: AppColors.primaryOrange,
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(16),
+                borderRadius: BorderRadius.circular(16.r),
               ),
             ),
             onPressed: () => Navigator.of(dialogContext).pop(true),

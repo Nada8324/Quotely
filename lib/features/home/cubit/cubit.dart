@@ -44,6 +44,7 @@ class HomeCubit extends Cubit<HomeState> {
   }
 
   Future<void> fetchQuotes() async {
+    if (isClosed) return;
     emit(
       HomeLoading(selectedCategory: _selectedCategory, categories: categories),
     );
@@ -53,6 +54,8 @@ class HomeCubit extends Cubit<HomeState> {
         category: _selectedCategory,
         limit: 100,
       );
+
+      if (isClosed) return;
       _quotes.shuffle(Random());
 
       emit(
@@ -63,6 +66,7 @@ class HomeCubit extends Cubit<HomeState> {
         ),
       );
     } catch (_) {
+      if (isClosed) return;
       emit(HomeError(message: 'Failed to load quotes. Please try again.'));
     }
   }
